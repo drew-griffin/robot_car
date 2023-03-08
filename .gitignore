@@ -1,0 +1,11 @@
+.DS_Store
+hardware/robot_car_hardware/*
+hardware/.Xli/
+*.jou
+*.log
+*.docx
+* 2.*
+* 3.*
+* 4.*
+* 5.*
+.o
