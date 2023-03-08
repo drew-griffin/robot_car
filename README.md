@@ -29,6 +29,8 @@ Emily Devlin (emdevlin@pdx.edu)
     - contains all C source files for the application (project developed using the Xiling Vitis Software Platform)
 - android_app 
     - contains the Android Studio App
+- pi_firmware
+    - contains the Raspberry Pi Firmware
 
 # Instructions for Building Project in Vivado 
 

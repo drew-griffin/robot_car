@@ -3,6 +3,7 @@ hardware/robot_car_hardware/*
 hardware/.Xli/
 *.jou
 *.log
+*.str
 *.docx
 * 2.*
 * 3.*
