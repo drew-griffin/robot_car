@@ -57,6 +57,6 @@ vivado -source rebuild.tcl
 ``` sh
 <your_path_to_repository>/android_app
 ```
-4. Open project. RobotCarApp should appear open. 
+4. Open project. RobotCarApp should appear upon open. 
 
 Note:  *The .gitignore should be set up that you can make modifications, and commit all files, and this will run seemlessly for team members (hopefully)*.
