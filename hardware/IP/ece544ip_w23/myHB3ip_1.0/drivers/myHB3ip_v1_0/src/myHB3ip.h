@@ -80,9 +80,8 @@ XStatus MYHB3IP_Reg_SelfTest(void * baseaddr_p);
 
 
 // API function prototypes
-XStatus HB3_initialize(uint32_t baseaddr_p);
-void HB3_setPWM(bool enable, u16 DC);
-uint32_t HB3_getTicks(void);
-uint32_t HB3_getRPM(void);
+void HB3_setPWM(uint32_t baseAddr, bool enable, uint16_t DC, bool direction);
+uint32_t HB3_getTicks(uint32_t baseAddr);
+uint32_t HB3_getRPM(uint32_t baseAddr);
 
 #endif // MYHB3IP_H
