@@ -30,9 +30,6 @@
 // Definitions for peripheral NEXYS4IO
 #define 	N4IO_DEVICE_ID		    XPAR_NEXYS4IO_0_DEVICE_ID
 #define 	N4IO_BASEADDR		    XPAR_NEXYS4IO_0_S00_AXI_BASEADDR
-// Definitions for PMOD Encoder
-#define 	PMODENC_ID 				XPAR_PMODENC544_0_DEVICE_ID
-#define 	PMODENC_BA				XPAR_PMODENC544_0_S00_AXI_BASEADDR
 // Definitions for PMOD HB3
 #define 	HB3_LEFT_BA 			XPAR_MYHB3IP_0_S00_AXI_BASEADDR
 #define 	HB3_RIGHT_BA			XPAR_MYHB3IP_1_S00_AXI_BASEADDR
@@ -41,9 +38,6 @@
 /*********Control Structs****************************/
 typedef struct user_io {
     uint8_t button_state;
-    uint16_t switch_state;
-    uint8_t rotary_count;
-    uint8_t enc_BtnSw_state;
     bool has_changed;
 } user_io_t, *ptr_user_io_t;
 

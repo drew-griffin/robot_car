@@ -21,11 +21,9 @@ module pmodhb3
 (
     input wire clk,
     input wire reset,
-//    input wire tachA,
-//    input wire tachB,
-    input wire [31:0]	controlReg,		// control register - duty cycle and enable bit
-    output wire enable
-//    output wire direction
+    input wire [31:0] controlReg,		// control register - duty cycle and enable bit
+    output wire enable,
+    output wire direction
     );
     
 reg [9:0]	DC;			// red, green, and blue duty cycles from ControlReg
@@ -36,7 +34,7 @@ reg [31:0]  div_count;
 reg			div_out;	// ouput of clock divider
 
 // set direction of the motor
-//assign direction = controlReg[0];
+assign direction = controlReg[0];
 
 // input clock divider
 always @(posedge clk) begin

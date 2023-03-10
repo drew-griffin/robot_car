@@ -404,6 +404,7 @@
 	end    
 
 	// Add user logic here
+   
     // synchronize tachA to clock
     reg tachA_delay, tachA_clean, tachB_delay, tachB_clean;
     always @ (posedge S_AXI_ACLK) begin
@@ -412,15 +413,15 @@
     	tachB_delay <= tachB;
       	tachB_clean <= tachB_delay;
     end
-    //wire reset;
-    assign direction = slv_reg0[0];
+   
+    //set direction of motor (testing)
+    //assign direction = slv_reg0[0];
+   
     pmodhb3 HB3(
         .clk(S_AXI_ACLK),
         .reset(S_AXI_ARESETN),
-      //  .tachA(tachA_clean),
-       // .tachB(tachB_clean),
         .controlReg(slv_reg0),
-       // .direction(direction),
+        .direction(direction),
         .enable(enable)
     );
     ticks ticker(

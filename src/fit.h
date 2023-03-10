@@ -23,11 +23,8 @@
 #include "cntrl_logic.h"
 
 /*********Peripheral Device Constants****************************/
-// Definitions for Fixed Interval timer - 100 MHz input clock, 4Hz output clock
-// Used as interval to handle the slide switches and pushbuttons
-#define FIT_IN_CLOCK_FREQ_HZ	XPAR_CPU_CORE_CLOCK_FREQ_HZ
-#define FIT_CLOCK_FREQ_HZ		4
-#define FIT_INTR_NUM			XPAR_MICROBLAZE_0_AXI_INTC_FIT_TIMER_0_INTERRUPT_INTR
+// Definitions for Fixed Interval timer - 100 MHz input clock, 2Hz output
+#define 	FIT_INTR_NUM		XPAR_MICROBLAZE_0_AXI_INTC_FIT_TIMER_0_INTERRUPT_INTR
 
 /**
  * FIT_Handler() - blinks heartbeat LED every 0.25 seconds

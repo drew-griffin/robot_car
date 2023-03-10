@@ -28,9 +28,12 @@ module nexysa7fpga
     clk,
     uart_rtl_rxd,
     uart_rtl_txd,
-    // debug header/Motor
-    JA_0,
-    JA_1,
+    // left motor header
+    JA_out,
+    JA_in,
+    // right motor header
+    JB_out,
+    JB_in,
     // encoder header
     JC);
     
@@ -52,8 +55,10 @@ module nexysa7fpga
   output [6:0]seg;
   input [15:0]sw;
   input clk;
-  output [1:0] JA_0;
-  input  [1:0] JA_1;
+  output [1:0] JA_out;
+  input  [1:0] JA_in;
+  output [1:0] JB_out;
+  input  [1:0] JB_in;
   input  [7:4] JC;
   output uart_rtl_txd;
   input  uart_rtl_rxd;
@@ -77,44 +82,55 @@ module nexysa7fpga
   wire [6:0]seg;
   wire [15:0]sw;
   wire clk;
-  wire [3:0] JA;
-  wire [3:0] JB;
   wire [31:0] control_reg;
   wire [31:0] gpio_pwm;
   wire [31:0] gpio_dir;
   // motor specific variables
-  wire SA; 
-  wire SB; 
-  wire EN; 
-  wire DIR; 
-  //encoder specific variables
+  wire LeftMotorDirection;
+  wire LeftMotorEnable;
+  wire LeftMotorEncoder_A;
+  wire LeftMotorEncoder_B;
+  wire RightMotorDirection;
+  wire RightMotorEnable;
+  wire RightMotorEncoder_A;
+  wire RightMotorEncoder_B;
+  // encoder specific variables
   wire EcA;
   wire EcB;
   wire EcBTN;
   wire EcSW;
-  // assign signals to the JA debug header and motor
-  assign JA_0[0] = DIR;
-  assign JA_0[1] = EN;
-  assign SA    = JA_1[0];
-  assign SB    = JA_1[1]; //not used, but connected to tachB on HB3 IP
+
+  // assign signals to the JA Left Motor
+  assign JA_out[0]          = LeftMotorDirection;
+  assign JA_out[1]          = LeftMotorEnable;
+  assign LeftMotorEncoder_A = JA_in[0];
+  assign LeftMotorEncoder_B = JA_in[1];
+    // assign signals to the JB Right Motor
+  assign JB_out[0]          = RightMotorDirection;
+  assign JB_out[1]          = RightMotorEnable;
+  assign RightMotorEncoder_A = JB_in[0];
+  assign RightMotorEncoder_B = JB_in[1];
   // assign signals to the JC header for encoder
   assign EcA   = JC[4]; // E7 
   assign EcB   = JC[5]; // J3
   assign EcBTN = JC[6]; // J4
   assign EcSW  = JC[7]; // E6
-
-                  
+                 
   embsys embsys_i
-       (.DIR(DIR),
-        .EN(EN),
+       (.LeftMotorDirection(LeftMotorDirection),
+        .LeftMotorEnable(LeftMotorEnable),
+        .LeftMotorEncoder_A(LeftMotorEncoder_A),
+        .LeftMotorEncoder_B(LeftMotorEncoder_B),
         .RGB1_Blue_0(RGB1_Blue),
         .RGB1_Green_0(RGB1_Green),
         .RGB1_Red_0(RGB1_Red),
         .RGB2_Blue_0(RGB2_Blue),
         .RGB2_Green_0(RGB2_Green),
         .RGB2_Red_0(RGB2_Red),
-        .SA(SA),
-        .SB(SB),
+        .RightMotorDirection(RightMotorDirection),
+        .RightMotorEnable(RightMotorEnable),
+        .RightMotorEncoder_A(RightMotorEncoder_A),
+        .RightMotorEncoder_B(RightMotorEncoder_B),
         .an_0(an),
         .btnC_0(btnC),
         .btnD_0(btnD),
