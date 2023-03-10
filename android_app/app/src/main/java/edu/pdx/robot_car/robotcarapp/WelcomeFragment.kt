@@ -1,3 +1,11 @@
+/**
+ * @fragment WelcomeFragment
+ * @data     03/09/2023
+ * @brief    This fragment will contain a welcome page for the user. The user may be able to change broker information and
+ *           passwords here as well. A connect button will traverse the user to the MainControlsFragment
+ * @priority HIGH (necessary)
+ */
+
 package edu.pdx.robot_car.robotcarapp
 
 import android.os.Bundle

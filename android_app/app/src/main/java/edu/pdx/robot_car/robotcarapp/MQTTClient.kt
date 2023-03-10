@@ -1,3 +1,9 @@
+/**
+ * @class MQQTClient
+ * @data  03/09/2023
+ * @brief Class implements MQTT client functions
+ */
+
 package edu.pdx.robot_car.robotcarapp
 
 import android.content.Context

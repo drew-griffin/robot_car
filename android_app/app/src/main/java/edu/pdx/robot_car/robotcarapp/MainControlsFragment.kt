@@ -1,3 +1,11 @@
+/**
+ * @fragment MainControlsFragment
+ * @data     03/09/2023
+ * @brief    This fragment allows the user to input basic controls to the robot car (forward, back, left, right).
+ *           This fragment will take this data, and publish it to a singular MQTT topic in JSON format.
+ *           The car can then subscribe to the corresponding topic, parse the message, and move accordingly
+ * @priority HIGH (necessary)
+ */
 package edu.pdx.robot_car.robotcarapp
 
 import android.os.Bundle

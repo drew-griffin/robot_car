@@ -1,3 +1,10 @@
+/**
+ * @class MainActivity
+ * @date  03/09/2023
+ * @brief MainActivity hosts the RobotCar activity, the navigation controller,
+ * and the corresponding fragments for the activity
+ */
+
 package edu.pdx.robot_car.robotcarapp
 
 import androidx.appcompat.app.AppCompatActivity

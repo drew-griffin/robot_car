@@ -1,3 +1,10 @@
+/**
+ * @filename MQQTConstants.kt
+ * @data  03/09/2023
+ * @brief file contains all relevant MQTT constants for robot car
+ * @todo  <Change for our project>
+ */
+
 package edu.pdx.robot_car.robotcarapp
 
 const val MQTT_SERVER_URI_KEY   = "MQTT_SERVER_URI"

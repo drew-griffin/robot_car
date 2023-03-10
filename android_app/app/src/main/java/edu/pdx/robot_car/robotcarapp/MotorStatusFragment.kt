@@ -1,3 +1,11 @@
+/**
+ * @fragment MotorStatusFragment
+ * @data     03/09/2023
+ * @brief    This fragment will subscribe to a singular JSON formatted topic that the robot car publishes.
+ *           The robot car will then parse through the data containing motor status, and display on the screen
+ *           accordingly
+ * @priority MEDIUM (Stretch goal)
+ */
 package edu.pdx.robot_car.robotcarapp
 
 import android.os.Bundle
