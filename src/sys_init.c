@@ -23,6 +23,7 @@
 #include "sys_init.h"
 #include "fit.h"
 #include "cntrl_logic.h"
+#include "uart.h"
 
 /*********Peripheral Device Constants****************************/
 //Definition for Interrupt Controller
@@ -54,6 +55,20 @@ int system_init(void) {
 		return XST_FAILURE;
 	}
 
+	// initialize the UART
+	    status = XUartLite_Initialize(&UART_Inst, UARTLITE_DEVICE_ID);
+    if (status != XST_SUCCESS)
+    {
+        return XST_FAILURE;
+    }
+
+	// test uart is initialized correctly
+    status = XUartLite_SelfTest(&UART_Inst);
+    if (status != XST_SUCCESS)
+    {
+        return XST_FAILURE;
+    }
+
 	// initialize the interrupt controller
 	status = XIntc_Initialize(&INTC_Inst, INTC_DEVICE_ID);
 	if (status != XST_SUCCESS)
@@ -69,6 +84,13 @@ int system_init(void) {
 	{
 		return XST_FAILURE;
 	}
+	status = XIntc_Connect(&INTC_Inst, UARTLITE_INTR_NUM,
+						(XInterruptHandler)uart_rx_irq,
+						(void *)&UART_Inst);
+    if (status != XST_SUCCESS)
+    {
+        return XST_FAILURE;
+    }
 
     // start the interrupt controller such that interrupts are enabled for
 	// all devices that cause interrupts.
@@ -80,5 +102,10 @@ int system_init(void) {
 
     // enable/disable the interrupts
 	XIntc_Enable(&INTC_Inst, FIT_INTR_NUM);
+	XIntc_Enable(&INTC_Inst, UARTLITE_INTR_NUM);
+
+	// need to tell the UART that we are enabling the RX/TX buffer interrupts
+	XUartLite_EnableInterrupt(&UART_Inst);
+	
 	return XST_SUCCESS;
 }

@@ -19,6 +19,7 @@
 
 #include "cntrl_logic.h"
 #include "microblaze_sleep.h"
+#include "uart.h"
 
 /********************Control Constants********************/
 #define NBTNS                           5
@@ -154,8 +155,24 @@ void update_pid(ptr_user_io_t uIO) {
 void display(void) {
 		uint32_t HB3_RPM_left = HB3_getRPM(HB3_LEFT_BA);
 		uint32_t HB3_RPM_right = HB3_getRPM(HB3_RIGHT_BA);
-        // display read rpm on left and set rpm on right
-	    NX4IO_SSEG_setDigit(SSEGHI, DIGIT7, CC_BLANK);
+		// display recieved data for debugging purposes
+		if(uart_rx && (1 == DEBUG))
+		{
+			uart_processing = true;
+            for(int i = 0; i < uart_buff_len; i++)
+            {
+				xil_printf("recieveed in rx%c\n\r", uart_buffer[i]);
+                NX4IO_SSEG_setDigit(SSEGHI, DIGIT7, (uart_buffer[i] % 48));
+            }
+            uart_buff_len = 0;
+            uart_rx = false;
+            uart_processing = false;
+		}
+		// display read rpm on left and set rpm on right
+		if(0 == DEBUG)
+		{
+	    	NX4IO_SSEG_setDigit(SSEGHI, DIGIT7, CC_BLANK);
+		}
 	    NX4IO_SSEG_setDigit(SSEGHI, DIGIT6, CC_BLANK);
 	    NX4IO_SSEG_setDigit(SSEGHI, DIGIT5, HB3_RPM_left/10);
 	    NX4IO_SSEG_setDigit(SSEGHI, DIGIT4, HB3_RPM_left%10);

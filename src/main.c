@@ -8,6 +8,7 @@
 #include "microblaze_sleep.h"
 #include "sys_init.h"
 #include "cntrl_logic.h"
+#include "uart.h"
 
 
 /*****************PID Control Instances*****************/
@@ -25,7 +26,7 @@ int main()
     }
 
     init_IO_struct(uIO);
-    
+    init_buffers();
 
     microblaze_enable_interrupts();
     NX4IO_setLEDs(0x00000000); // clear LEDs, odd behavior where they turn on
