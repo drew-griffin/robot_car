@@ -7,13 +7,13 @@
 #include "xintc.h"
 #include "xuartlite.h"
 #include "platform.h"
-#include "xil_exception.h"
 #include "xil_printf.h"
+#include "xuartlite_l.h"
 
 // forward call functions
 int system_init(void);
 void fit_handler(void);
-void uart_rx_irq(void *CallBackRef, unsigned int ByteCount);
+void uart_rx_irq(void *CallBackRef);
 
 /**************** Macros ****************/
 // INTC
@@ -27,7 +27,8 @@ void uart_rx_irq(void *CallBackRef, unsigned int ByteCount);
 #define N4IO_BASEADDR           XPAR_NEXYS4IO_0_S00_AXI_BASEADDR
 // UARTLITE
 #define UARTLITE_DEVICE_ID      XPAR_UARTLITE_0_DEVICE_ID
-#define UARTLITE_INTR_NUM       XPAR_MICROBLAZE_0_AXI_INTC_AXI_UARTLITE_0_INTERRUPT_INTR
+#define UARTLITE_INTR_NUM       XPAR_INTC_0_UARTLITE_0_VEC_ID
+#define UARLITE_BASE_ADDR       XPAR_UARTLITE_0_BASEADDR
 #define UART_BUFF_SIZE          1024 // kilobyte of data
 #define CHARACTER_MASK          48
 
@@ -36,7 +37,7 @@ XIntc       INTC_Inst; // INTC instance
 XUartLite   UART_Inst; // UART instance
 
 // global variables
-static uint8_t uart_buffer[UART_BUFF_SIZE] = {0};
+static volatile uint8_t uart_buffer[UART_BUFF_SIZE] = {0};
 static volatile bool uart_rx = false;
 static volatile uint32_t uart_buff_len = 0;
 static bool dprx_on = false;
@@ -52,7 +53,6 @@ int main()
         xil_printf("FATAL(main): System failed to initialize!!!!\r\n");
     }
 
-    XUartLite_SetRecvHandler(&UART_Inst, uart_rx_irq, &UART_Inst);
     microblaze_enable_interrupts();
     NX4IO_setLEDs(0xFFFF);
     usleep(1000 * 500);
@@ -62,20 +62,17 @@ int main()
 
     for(;;)
     {
-        while(XUartLite_Recv(&UART_Inst, &uart_buffer[0], 1) == 0);
-        XUartLite_ResetFifos(&UART_Inst);
-        NX4IO_SSEG_setDigit(SSEGLO, DIGIT0, (uart_buffer[0] % CHARACTER_MASK));
-        xil_printf("RX from arduino %d\r\n",uart_buffer[0]);
-        // if(uart_rx)
-        // {
-        //     uart_processing = true;
-        //     for(int i = 0; i < uart_buff_len; i++)
-        //     {
-        //         NX4IO_SSEG_setDigit(SSEGLO, DIGIT0, uart_buffer[i]);
-        //     }
-        //     uart_buff_len = 0;
-        //     uart_rx = false;
-        // }
+        if(uart_rx)
+        {
+            uart_processing = true;
+            for(int i = 0; i < uart_buff_len; i++)
+            {
+                NX4IO_SSEG_setDigit(SSEGLO, DIGIT0, (uart_buffer[i] % 48));
+            }
+            uart_buff_len = 0;
+            uart_rx = false;
+            uart_processing = false;
+        }
     }
 }
 
@@ -117,8 +114,9 @@ int system_init(void)
     {
         return XST_FAILURE;
     }
+    // can connect the IRQ as normal
     status = XIntc_Connect(&INTC_Inst, UARTLITE_INTR_NUM,
-                            (XInterruptHandler)XUartLite_InterruptHandler,
+                            (XInterruptHandler)uart_rx_irq,
                             (void *)&UART_Inst);
     if (status != XST_SUCCESS)
     {
@@ -134,14 +132,8 @@ int system_init(void)
     XIntc_Enable(&INTC_Inst, FIT_INTR_NUM);
     XIntc_Enable(&INTC_Inst, UARTLITE_INTR_NUM);
 
-    // Let's see if exceptions are needed?
-    Xil_ExceptionInit();
-
-    Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_INT,
-                        (Xil_ExceptionHandler)XIntc_InterruptHandler,
-                        &INTC_Inst);
-
-    Xil_ExceptionEnable();
+    // need to separatley enable the interrupt because that isn't confusing or anything
+    XUartLite_EnableInterrupt(&UART_Inst);
 
     return XST_SUCCESS;
 }
@@ -162,14 +154,19 @@ void fit_handler(void)
 }
 
 // UART RX IRQ
-void uart_rx_irq(void *CallBackRef, unsigned int ByteCount)
+// idk if we need the call back here since we already use the base address
+void uart_rx_irq(void *CallBackRef)
 {
     NX4IO_SSEG_setDecPt(SSEGLO, DIGIT0, dprx_on);
     if (!uart_processing)
     {
-        uart_buffer[uart_buff_len] = ByteCount;
-        uart_buff_len += 1;
-        uart_rx = true;
+        // use low level library to read tell buffer is clear
+        while(!XUartLite_IsReceiveEmpty(UARLITE_BASE_ADDR)) {
+            // receiving the byte hear clears the buffer
+            uart_buffer[uart_buff_len] = XUartLite_RecvByte(UARLITE_BASE_ADDR);
+            uart_buff_len += 1;
+            uart_rx = true;
+        }
     }
     dprx_on = (dprx_on) ? false : true;
 }
