@@ -49,23 +49,13 @@ class WelcomeFragment : Fragment() {
         if (!isConnected()) {
             Log.d(TAG, "Internet connection NOT available")
             Toast.makeText(context, "Internet connection NOT available", Toast.LENGTH_LONG).show()
-            //finish()
+            // TODO: Disable Connect button if internet connection is not available?
+            // TODO: Or take some other action?
+            // Note: The original example app called finish() but that function does not work in a fragment
         } else {
             Log.d(TAG, "Connected to the Internet")
             Toast.makeText(context, "Connected to the Internet", Toast.LENGTH_LONG).show()
         }
-
-        // Assign user-entered or default values to the MQTT Settings
-        val mqttNetwork: String = binding?.MQTTNetwork?.text.toString() ?: MQTT_SERVER_URI
-        val mqttKey: String = binding?.MQTTKey?.text.toString() ?: MQTT_CLIENT_ID
-        val mqttUsername: String = binding?.MQTTUsername?.text.toString() ?: MQTT_USERNAME
-        val mqttPassword: String = binding?.MQTTPassword?.text.toString() ?: MQTT_PWD
-
-
-        // open mQTT Broker communication
-        mqttClientID = MqttClient.generateClientId()
-        mqttClient = MQTTClient(context, mqttNetwork, mqttClientID)
-
 
         // When they click the button, navigate to the next screen
         binding?.apply {
@@ -73,6 +63,21 @@ class WelcomeFragment : Fragment() {
             // TODO: Add key and custom username/password to the connect function
             // TODO: Export some of the MQTT functionality to the ViewModel since it is data-related, not UI-related
             connectButton.setOnClickListener {
+
+                var mqttNetwork: String = binding?.MQTTNetwork?.text.toString() ?: MQTT_SERVER_URI
+                val mqttKey: String = binding?.MQTTKey?.text.toString() ?: MQTT_CLIENT_ID
+                val mqttUsername: String = binding?.MQTTUsername?.text.toString() ?: MQTT_USERNAME
+                val mqttPassword: String = binding?.MQTTPassword?.text.toString() ?: MQTT_PWD
+
+                if (mqttNetwork == ""){
+                    mqttNetwork = MQTT_SERVER_URI
+                }
+
+
+                // open mQTT Broker communication
+                mqttClientID = MqttClient.generateClientId()
+                mqttClient = MQTTClient(context, mqttNetwork, mqttClientID)
+
                 mqttClient.connect(
                     mqttUsername,
                     mqttPassword,

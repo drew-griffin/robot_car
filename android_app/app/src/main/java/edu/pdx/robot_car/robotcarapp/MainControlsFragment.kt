@@ -9,6 +9,7 @@
 package edu.pdx.robot_car.robotcarapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +19,6 @@ import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import edu.pdx.robot_car.robotcarapp.databinding.FragmentMainControlsBinding
-import edu.pdx.robot_car.robotcarapp.databinding.FragmentWelcomeBinding
 import edu.pdx.robot_car.robotcarapp.model.MotorDataViewModel
 
 /**
@@ -31,20 +31,10 @@ import edu.pdx.robot_car.robotcarapp.model.MotorDataViewModel
  * @priority MEDIUM (necessary)
  */
 
-
-// Credit for the arrow icons:
-//<a href="https://www.flaticon.com/free-icons/arrow" title="arrow icons">Arrow icons created by Freepik - Flaticon</a>
-// TODO: Put this credit in a better place or make our own icons
-
 class MainControlsFragment : Fragment() {
 
     private var binding: FragmentMainControlsBinding? = null
     private val sharedViewModel: MotorDataViewModel by activityViewModels()
-
-    var moveUp: Boolean = false
-    var moveDown: Boolean = false
-    var moveRight: Boolean = false
-    var moveLeft: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,13 +48,34 @@ class MainControlsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+            binding?.apply {
+                // Specify the fragment as the lifecycle owner
+                lifecycleOwner = viewLifecycleOwner
+                // Assign the view model to a property in the binding class
+                viewModel = sharedViewModel
+                // Assign the fragment
+                //mainControlsFragment = this@MainControlsFragment
+            }
+
+
         // Set listeners for each button
-        // TODO: Export this to MotorDataViewModel. On click, something should trigger MotorDataView model to update the data
         binding?.up?.setOnClickListener{
-            moveUp = true
-            Toast.makeText(context,"Up Button Pressed", Toast.LENGTH_SHORT).show()
+            sharedViewModel.incrementCounter((0))
+            binding?.upCount?.text = "Up Counter: ${sharedViewModel.upCounter.value}"
+            Log.d("MainControlsFragment","Up Counter: ${sharedViewModel.upCounter.value}")
         }
-        // TODO: Add this functionality for the other 3 buttons too
+        binding?.right?.setOnClickListener{
+            sharedViewModel.incrementCounter((1))
+            binding?.rightCount?.text = "Right Counter: ${sharedViewModel.rightCounter.value}"
+        }
+        binding?.down?.setOnClickListener{
+            sharedViewModel.incrementCounter((2))
+            binding?.downCount?.text = "Down Counter: ${sharedViewModel.downCounter.value}"
+        }
+        binding?.left?.setOnClickListener{
+            sharedViewModel.incrementCounter((3))
+            binding?.leftCount?.text = "Left Counter: ${sharedViewModel.leftCounter.value}"
+        }
 
         binding?.motorStatusButton?.setOnClickListener{
             findNavController().navigate(R.id.action_mainControlsFragment_to_motorStatusFragment)
@@ -73,6 +84,7 @@ class MainControlsFragment : Fragment() {
             findNavController().navigate(R.id.action_mainControlsFragment_to_videoFeedFragment)
         }
     }
+
 }
 
 

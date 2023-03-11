@@ -1,91 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainControlsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    tools:context=".MainControlsFragment">
+    <data>
+        <variable
+            name="viewModel"
+            type="edu.pdx.robot_car.robotcarapp.model.MotorDataViewModel" />
+    </data>
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="We made it to the next screen!" />
+        android:orientation="vertical">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageView
+        <Button
             android:id="@+id/up"
-            android:layout_width="82dp"
-            android:layout_height="116dp"
-            android:layout_marginTop="99dp"
-            android:layout_marginBottom="239dp"
-            android:src="@drawable/up_arrow"
-            app:layout_constraintBottom_toTopOf="@+id/motorStatusButton"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.445"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="move Up"
+            tools:layout_editor_absoluteX="140dp"
+            tools:layout_editor_absoluteY="98dp" />
 
-        <ImageView
+        <Button
             android:id="@+id/down"
-            android:layout_width="82dp"
-            android:layout_height="116dp"
-            android:src="@drawable/down_arrow"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.428"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.499" />
-
-        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="move Down" />
+        <Button
             android:id="@+id/right"
-            android:layout_width="104dp"
-            android:layout_height="85dp"
-            android:layout_marginBottom="408dp"
-            android:src="@drawable/right_arrow"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.785"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="move Right" />
+        <Button
             android:id="@+id/left"
-            android:layout_width="104dp"
-            android:layout_height="85dp"
-            android:layout_marginTop="221dp"
-            android:layout_marginBottom="144dp"
-            android:src="@drawable/left_arrow"
-            app:layout_constraintBottom_toTopOf="@+id/motorStatusButton"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.126"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="move Left" />
+        <View
+            android:id="@+id/divider1"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="?android:attr/listDivider" />
         <Button
             android:id="@+id/motorStatusButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="78dp"
-            android:layout_marginBottom="208dp"
             android:text="Motor Status Details"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/up" />
+            tools:layout_editor_absoluteX="78dp"
+            tools:layout_editor_absoluteY="475dp" />
 
         <Button
             android:id="@+id/videoFeedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="43dp"
-            android:layout_marginBottom="136dp"
             android:text="Live Video"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/motorStatusButton"
-            app:layout_constraintTop_toBottomOf="@+id/motorStatusButton" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            tools:layout_editor_absoluteX="121dp"
+            tools:layout_editor_absoluteY="536dp" />
 
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="?android:attr/listDivider" />
+
+        <TextView
+            android:id="@+id/upCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Up Count: "
+            android:textSize="20sp"
+            tools:layout_editor_absoluteX="51dp"
+            tools:layout_editor_absoluteY="596dp" />
+
+        <TextView
+            android:id="@+id/rightCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Right Count: "
+            android:textSize="20sp"
+            tools:layout_editor_absoluteX="211dp"
+            tools:layout_editor_absoluteY="655dp" />
+
+        <TextView
+            android:id="@+id/downCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Down Count: "
+            android:textSize="20sp"
+            tools:layout_editor_absoluteX="211dp"
+            tools:layout_editor_absoluteY="600dp" />
+
+        <TextView
+            android:id="@+id/leftCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Left Count: "
+            android:textSize="20sp"
+            tools:layout_editor_absoluteX="51dp"
+            tools:layout_editor_absoluteY="651dp" />
+
+
+
+</LinearLayout>
 </FrameLayout>
+
+</layout>
