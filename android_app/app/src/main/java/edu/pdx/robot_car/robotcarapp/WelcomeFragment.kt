@@ -44,6 +44,12 @@ class WelcomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding?.apply {
+            lifecycleOwner = viewLifecycleOwner
+            viewModel = sharedViewModel
+            //mainControlsFragment = this@MainControlsFragment
+        }
+
         // Check if Internet connection is available
         // exit if it is not
         if (!isConnected()) {

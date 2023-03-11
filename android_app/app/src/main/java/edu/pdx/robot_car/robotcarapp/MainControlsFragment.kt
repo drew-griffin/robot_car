@@ -49,19 +49,17 @@ class MainControlsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
             binding?.apply {
-                // Specify the fragment as the lifecycle owner
                 lifecycleOwner = viewLifecycleOwner
-                // Assign the view model to a property in the binding class
                 viewModel = sharedViewModel
-                // Assign the fragment
-                //mainControlsFragment = this@MainControlsFragment
+                mainControlsFragment = this@MainControlsFragment
             }
 
 
         // Set listeners for each button
         binding?.up?.setOnClickListener{
             sharedViewModel.incrementCounter((0))
-            binding?.upCount?.text = "Up Counter: ${sharedViewModel.upCounter.value}"
+            // For the up counter, I tried using the XML to directly print the value instead of adjusting it here.
+            //binding?.upCount?.text = "Up Counter: ${sharedViewModel.upCounter.value}"
             Log.d("MainControlsFragment","Up Counter: ${sharedViewModel.upCounter.value}")
         }
         binding?.right?.setOnClickListener{

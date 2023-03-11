@@ -18,13 +18,17 @@ class MotorDataViewModel: ViewModel() {
     private val _motor1_position = MutableLiveData<String>()
     val motor1_position: LiveData<String> = _motor1_position
 
-    private val _upCounter = MutableLiveData<Int>(0)
+    private val _upCounter = MutableLiveData<Int>(5)
     val upCounter: LiveData<Int> = _upCounter
-    private val _downCounter = MutableLiveData<Int>(0)
+
+    private val _upCounterString = MutableLiveData<String>()
+    val upCounterString: LiveData<String> = _upCounterString
+
+    private val _downCounter = MutableLiveData<Int>(5)
     val downCounter: LiveData<Int> = _downCounter
-    private val _rightCounter = MutableLiveData<Int>(0)
+    private val _rightCounter = MutableLiveData<Int>(5)
     val rightCounter: LiveData<Int> = _rightCounter
-    private val _leftCounter = MutableLiveData<Int>(0)
+    private val _leftCounter = MutableLiveData<Int>(5)
     val leftCounter: LiveData<Int> = _leftCounter
 
     // This is an example of a method the ViewModel can do
@@ -35,12 +39,21 @@ class MotorDataViewModel: ViewModel() {
 
     fun incrementCounter(position: Int){
         when(position){
-            0 -> _upCounter.value?.plus(1)
-            1 -> _rightCounter.value?.plus(1)
-            2 -> _downCounter.value?.plus(1)
-            3 -> _leftCounter.value?.plus(1)
+            0 -> {
+                _upCounter.value?.plus(5)
+                _upCounterString.value = "Up Count: $_upCounter.value.toString()"
+                Log.d("MotorDataViewModel", "Up Counter: ${_upCounter.value}")
+            }
+            1 -> {
+                _rightCounter.value?.plus(5)
+                Log.d("MotorDataViewModel", "Right Counter: ${_rightCounter.value}")
+            }
+            2 -> _downCounter.value?.plus(5)
+            3 -> {
+                _leftCounter.value?.plus(5)
+                Log.d("MotorDataViewModel", "Left Counter: ${_leftCounter.value}")
+            }
         }
-        Log.d("MainControlsFragment","Up Counter: ${_upCounter.value}")
     }
 
 }
