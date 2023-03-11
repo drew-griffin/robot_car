@@ -26,8 +26,9 @@ module nexysa7fpga
     seg,
     sw,
     clk,
-    uart_rtl_rxd,
-    uart_rtl_txd,
+    // UART pins
+    TX,
+    RX,
     // debug header/Motor
     JA_0,
     JA_1,
@@ -55,8 +56,8 @@ module nexysa7fpga
   output [1:0] JA_0;
   input  [1:0] JA_1;
   input  [7:4] JC;
-  output uart_rtl_txd;
-  input  uart_rtl_rxd;
+  output TX;
+  input  RX;
 
   wire RGB2_Blue;
   wire RGB2_Green;
@@ -131,6 +132,6 @@ module nexysa7fpga
         .resetn(btnCpuReset),
         .seg_0(seg),
         .sw_0(sw),
-        .uart_rtl_0_rxd(uart_rtl_rxd),
-        .uart_rtl_0_txd(uart_rtl_txd));
+        .uart_rtl_0_rxd(RX),
+        .uart_rtl_0_txd(TX));
 endmodule
