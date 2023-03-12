@@ -28,8 +28,6 @@ import org.eclipse.paho.client.mqttv3.*
 class WelcomeFragment : Fragment() {
 
     private var binding: FragmentWelcomeBinding? = null
-    private lateinit var mqttClient : MQTTClient
-    private lateinit var mqttClientID: String
     private val sharedViewModel: MotorDataViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -64,6 +62,15 @@ class WelcomeFragment : Fragment() {
             Toast.makeText(context, "Connected to the Internet", Toast.LENGTH_LONG).show()
         }
 
+        val mqttNetwork: String =  if (binding?.MQTTNetwork?.text.toString() != "") binding?.MQTTNetwork?.text.toString() else MQTT_SERVER_URI
+        val mqttKey: String =      if (binding?.MQTTKey?.text.toString() != "") binding?.MQTTKey?.text.toString() else MQTT_CLIENT_ID
+        val mqttUsername: String = if (binding?.MQTTUsername?.text.toString() != "") binding?.MQTTUsername?.text.toString() else MQTT_USERNAME
+        val mqttPassword: String = if (binding?.MQTTPassword?.text.toString() != "") binding?.MQTTPassword?.text.toString() else MQTT_PWD
+
+        // open mQTT Broker communication
+        sharedViewModel.mqttClientID = MqttClient.generateClientId()
+        sharedViewModel.mqttClient = MQTTClient(context, mqttNetwork, sharedViewModel.mqttClientID)
+
         // When they click the button, navigate to the next screen
         binding?.apply {
             // Set up the button click listeners
@@ -71,21 +78,11 @@ class WelcomeFragment : Fragment() {
             // TODO: Export some of the MQTT functionality to the ViewModel since it is data-related, not UI-related
             connectButton.setOnClickListener {
 
-                var mqttNetwork: String = binding?.MQTTNetwork?.text.toString() ?: MQTT_SERVER_URI
-                val mqttKey: String = binding?.MQTTKey?.text.toString() ?: MQTT_CLIENT_ID
-                val mqttUsername: String = binding?.MQTTUsername?.text.toString() ?: MQTT_USERNAME
-                val mqttPassword: String = binding?.MQTTPassword?.text.toString() ?: MQTT_PWD
-
-                if (mqttNetwork == ""){
-                    mqttNetwork = MQTT_SERVER_URI
-                }
-
-
                 // open mQTT Broker communication
-                mqttClientID = MqttClient.generateClientId()
-                mqttClient = MQTTClient(context, mqttNetwork, mqttClientID)
+                sharedViewModel.mqttClientID = MqttClient.generateClientId()
+                sharedViewModel.mqttClient = MQTTClient(context, mqttNetwork, sharedViewModel.mqttClientID)
 
-                mqttClient.connect(
+                sharedViewModel.mqttClient.connect(
                     mqttUsername,
                     mqttPassword,
                     object : IMqttActionListener {
@@ -154,8 +151,8 @@ class WelcomeFragment : Fragment() {
 
     private fun subscribeToStatus(subscribeTopic: String) {
         // subscribe to status topic only if connected to broker
-        if (mqttClient.isConnected()) {
-            mqttClient.subscribe(
+        if (sharedViewModel.mqttClient.isConnected()) {
+            sharedViewModel.mqttClient.subscribe(
                 topic = subscribeTopic,
                 qos = 1,
                 object : IMqttActionListener {

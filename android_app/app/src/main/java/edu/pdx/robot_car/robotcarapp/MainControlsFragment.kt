@@ -9,17 +9,17 @@
 package edu.pdx.robot_car.robotcarapp
 
 import android.os.Bundle
+import android.os.Message
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import edu.pdx.robot_car.robotcarapp.databinding.FragmentMainControlsBinding
 import edu.pdx.robot_car.robotcarapp.model.MotorDataViewModel
+import org.json.JSONObject
 
 /**
  * @fragment MainControlsFragment
@@ -58,20 +58,24 @@ class MainControlsFragment : Fragment() {
 
         // Set listeners for each button
         binding?.up?.setOnClickListener{
-            sharedViewModel.incrementCounter((0))
+            sharedViewModel.updateMotor((0))
+            packageDataAndSend()
             // For the up counter, I tried using the XML to directly print the value instead of adjusting it here.
             Log.d("MainControlsFragment","Up Counter: ${sharedViewModel.upCounter.value}")
         }
         binding?.right?.setOnClickListener{
-            sharedViewModel.incrementCounter((1))
+            sharedViewModel.updateMotor((1))
+            packageDataAndSend()
             binding?.rightCount?.text = "Right Counter: ${sharedViewModel.rightCounter.value}"
         }
         binding?.down?.setOnClickListener{
-            sharedViewModel.incrementCounter((2))
+            sharedViewModel.updateMotor((2))
+            packageDataAndSend()
             binding?.downCount?.text = "Down Counter: ${sharedViewModel.downCounter.value}"
         }
         binding?.left?.setOnClickListener{
-            sharedViewModel.incrementCounter((3))
+            sharedViewModel.updateMotor((3))
+            packageDataAndSend()
             binding?.leftCount?.text = "Left Counter: ${sharedViewModel.leftCounter.value}"
         }
 
@@ -81,6 +85,22 @@ class MainControlsFragment : Fragment() {
         binding?.videoFeedButton?.setOnClickListener{
             findNavController().navigate(R.id.action_mainControlsFragment_to_videoFeedFragment)
         }
+    }
+
+    /**
+     * @function packageDataAndSend
+     * Takes in the state of the motor directs from latest motor update
+     * Packages the data, and uses publishMQQTMessage method in the MotorDataViewModel
+     * to send the message over MQTT
+     */
+    private fun packageDataAndSend(){
+        val messageJSON = JSONObject()
+        messageJSON.put("UP", sharedViewModel.upCounter.value)
+        messageJSON.put("DOWN", sharedViewModel.downCounter.value)
+        messageJSON.put("RIGHT", sharedViewModel.rightCounter.value)
+        messageJSON.put("LEFT", sharedViewModel.leftCounter.value)
+        val message = messageJSON.toString()
+        sharedViewModel.publishMQTTMessage(ROBOT_CAR_CONTROL, message)
     }
     override fun onDestroyView() {
         super.onDestroyView()
