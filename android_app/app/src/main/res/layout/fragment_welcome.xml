@@ -8,6 +8,9 @@
         <variable
             name="viewModel"
             type="edu.pdx.robot_car.robotcarapp.model.MotorDataViewModel" />
+        <variable
+            name="welcomeFragment"
+            type="edu.pdx.robot_car.robotcarapp.WelcomeFragment" />
     </data>
 <FrameLayout
     android:layout_width="match_parent"

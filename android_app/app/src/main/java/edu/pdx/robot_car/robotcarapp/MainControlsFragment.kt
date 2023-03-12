@@ -42,6 +42,7 @@ class MainControlsFragment : Fragment() {
     ): View? {
         val fragmentBinding = FragmentMainControlsBinding.inflate(inflater, container, false)
         binding = fragmentBinding
+        Log.d("Main Controls Fragment: ","Fragment Created")
         return fragmentBinding.root
     }
 
@@ -59,7 +60,6 @@ class MainControlsFragment : Fragment() {
         binding?.up?.setOnClickListener{
             sharedViewModel.incrementCounter((0))
             // For the up counter, I tried using the XML to directly print the value instead of adjusting it here.
-            //binding?.upCount?.text = "Up Counter: ${sharedViewModel.upCounter.value}"
             Log.d("MainControlsFragment","Up Counter: ${sharedViewModel.upCounter.value}")
         }
         binding?.right?.setOnClickListener{
@@ -82,7 +82,11 @@ class MainControlsFragment : Fragment() {
             findNavController().navigate(R.id.action_mainControlsFragment_to_videoFeedFragment)
         }
     }
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d("Main Controls Fragment: ","Fragment Destroyed")
+        binding = null
+    }
 }
 
 

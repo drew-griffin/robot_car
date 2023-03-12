@@ -24,6 +24,9 @@ class MotorDataViewModel: ViewModel() {
     private val _upCounterString = MutableLiveData<String>()
     val upCounterString: LiveData<String> = _upCounterString
 
+    private val _downCounterString = MutableLiveData<String>()
+    val downCounterString: LiveData<String> = _downCounterString
+
     private val _downCounter = MutableLiveData<Int>(5)
     val downCounter: LiveData<Int> = _downCounter
     private val _rightCounter = MutableLiveData<Int>(5)
@@ -40,9 +43,16 @@ class MotorDataViewModel: ViewModel() {
     fun incrementCounter(position: Int){
         when(position){
             0 -> {
-                _upCounter.value?.plus(5)
-                _upCounterString.value = "Up Count: $_upCounter.value.toString()"
-                Log.d("MotorDataViewModel", "Up Counter: ${_upCounter.value}")
+                if (_upCounterString.value == "a"){
+                    _upCounterString.value = "b"
+                }
+                else {
+                    _upCounterString.value = "a"
+                }
+               // _upCounterString.value = "Count has been changed"
+               // _upCounter.value?.plus(5)
+               // _upCounterString.value = "Up Count: $_upCounter.value.toString()"
+               // Log.d("MotorDataViewModel", "Up Counter: ${_upCounter.value}")
             }
             1 -> {
                 _rightCounter.value?.plus(5)
@@ -54,6 +64,10 @@ class MotorDataViewModel: ViewModel() {
                 Log.d("MotorDataViewModel", "Left Counter: ${_leftCounter.value}")
             }
         }
+    }
+
+    fun updateDownCounter(MQTT_message: String){
+        _upCounterString.value = MQTT_message
     }
 
 }

@@ -85,7 +85,7 @@
                 android:id="@+id/downCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Down Count: "
+                android:text="@{viewModel.downCounterString}"
                 android:textSize="20sp" />
 
             <TextView
