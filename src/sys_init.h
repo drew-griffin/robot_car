@@ -30,4 +30,4 @@
 */
 int system_init(void);
 
-#endif
+#endif // SYS_INIT_H

@@ -148,6 +148,43 @@ void update_pid(ptr_user_io_t uIO) {
 }
 
 /**
+ * set_wheel_direction() - sets the direction of the two wheels
+ * 
+ * @brief		sets wheel directions to be run after recv a message
+ * 
+ * @param		left_wheel  - left wheel direction
+ * @param		right_wheel - right wheel direction
+ * 
+*/
+void set_wheel_directions(bool left_wheel, bool right_wheel)
+{
+	leftMotorForward = left_wheel;
+	rightMotorForward = right_wheel;
+}
+
+/**
+ * run_motors() - sets the motor controls
+ * 
+ * @brief		turns the motors on or off
+ * 
+ * @param		flag - tells us if we are running or stopping
+ * 				the motors
+*/
+void run_motors(bool flag)
+{
+	if(flag)
+	{
+		HB3_setPWM(HB3_LEFT_BA, pwmEnable, setpoint, leftMotorForward);
+        HB3_setPWM(HB3_RIGHT_BA, pwmEnable, setpoint, rightMotorForward);
+	}
+	else
+	{
+		HB3_setPWM(HB3_LEFT_BA, pwmEnable, 0, leftMotorForward);
+		HB3_setPWM(HB3_RIGHT_BA, pwmEnable, 0, rightMotorForward);
+	}
+}
+
+/**
  * display() - displays wheel speed
  *
  * @brief       displays each wheel's speed after PID
@@ -155,24 +192,8 @@ void update_pid(ptr_user_io_t uIO) {
 void display(void) {
 		uint32_t HB3_RPM_left = HB3_getRPM(HB3_LEFT_BA);
 		uint32_t HB3_RPM_right = HB3_getRPM(HB3_RIGHT_BA);
-		// display recieved data for debugging purposes
-		if(uart_rx && (1 == DEBUG))
-		{
-			uart_processing = true;
-            for(int i = 0; i < uart_buff_len; i++)
-            {
-				xil_printf("recieveed in rx%c\n\r", uart_buffer[i]);
-                NX4IO_SSEG_setDigit(SSEGHI, DIGIT7, (uart_buffer[i] % 48));
-            }
-            uart_buff_len = 0;
-            uart_rx = false;
-            uart_processing = false;
-		}
-		// display read rpm on left and set rpm on right
-		if(0 == DEBUG)
-		{
-	    	NX4IO_SSEG_setDigit(SSEGHI, DIGIT7, CC_BLANK);
-		}
+
+		NX4IO_SSEG_setDigit(SSEGHI, DIGIT7, CC_BLANK);
 	    NX4IO_SSEG_setDigit(SSEGHI, DIGIT6, CC_BLANK);
 	    NX4IO_SSEG_setDigit(SSEGHI, DIGIT5, HB3_RPM_left/10);
 	    NX4IO_SSEG_setDigit(SSEGHI, DIGIT4, HB3_RPM_left%10);

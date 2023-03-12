@@ -1,5 +1,5 @@
 /**
- * @file sys_init.c
+ * @file uart.c
  * 
  * @authors Stephen, Drew, Noah
  * @copyright Portland State University, 2023

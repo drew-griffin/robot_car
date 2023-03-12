@@ -20,6 +20,10 @@
 #include <stdint.h>
 #include "fit.h"
 
+// global variables
+uint8_t run_count = 0;
+extern bool    running_motors;
+
 /**
  * FIT_Handler() - Fixed Interval interrupt handler
  * 
@@ -35,6 +39,11 @@ void FIT_Handler(void) {
     if (!isInitialized) {
         dpOn = true;
         isInitialized = true;
+    }
+
+    if (running_motors)
+    {
+        run_count += 1;
     }
 
     dpOn = (dpOn) ? false : true;

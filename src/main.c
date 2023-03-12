@@ -9,10 +9,15 @@
 #include "sys_init.h"
 #include "cntrl_logic.h"
 #include "uart.h"
+#include "task.h"
 
 
 /*****************PID Control Instances*****************/
 static ptr_user_io_t uIO;
+
+/*****************Global State*****************/
+task_t run_state_t = idle;
+void (*task_scheduler[4])() = {idle_state, processing_state, run_state, end_state};
 
 int main()
 {
@@ -32,9 +37,10 @@ int main()
     NX4IO_setLEDs(0x00000000); // clear LEDs, odd behavior where they turn on
     while(1)
     {
-        read_user_IO(uIO);
-        update_pid(uIO);
-        display();
+        // read_user_IO(uIO);
+        // update_pid(uIO);
+        // display();
+        task_scheduler[run_state_t]();
     }
     
     microblaze_disable_interrupts();

@@ -63,5 +63,8 @@ void display(void);
 
 void update_pid(ptr_user_io_t uIO);
 
+void set_wheel_directions(bool left_wheel, bool right_wheel);
+
+void run_motors(bool flag);
 
 #endif

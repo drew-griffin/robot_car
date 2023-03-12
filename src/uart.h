@@ -5,7 +5,7 @@
  * @copyright Portland State University, 2023
  * 
  * @brief
- * This header file handles the UART data
+ * This is the header file handles the UART data
  * 
  * <pre>
  * MODIFICATION HISTORY:
@@ -15,6 +15,9 @@
  * 1.00a SW 11-Mar-2023 First release
  * </pre>
 ************************************************************/
+
+#ifndef UART_H
+#define UART_H
 
 #include <stdlib.h>
 #include<stdio.h>
@@ -29,7 +32,6 @@
 #define UARLITE_BASE_ADDR       XPAR_UARTLITE_0_BASEADDR
 #define UART_BUFF_SIZE          1024 // kilobyte of data
 #define CHARACTER_MASK          48
-#define DEBUG                   1
 
 // UART instance
 XUartLite   UART_Inst; // UART instance
@@ -46,3 +48,5 @@ void init_buffers(void);
  * IRQ handler for the UART rx pin
 */
 void uart_rx_irq(void *CallBackRef);
+
+#endif  // UART_H
