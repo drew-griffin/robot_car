@@ -26,11 +26,20 @@ static bool dprx_on = true;
 void init_buffers(void)
 {
     uart_rx = false;
-    uart_buff_len = false;
-    uart_processing = false;
+    uart_rx_buff_len = false;
+    uart_rx_processing = false;
     for(int i = 0; i < UART_BUFF_SIZE; i++) 
     {
-        uart_buffer[i] = 0;
+        uart_rx_buffer[i] = 0;
+    }
+
+    
+    uart_tx = false;
+    uart_tx_buff_len = false;
+    uart_tx_processing = false;
+    for(int i = 0; i < SEND_BUFF_SIZE; i++) 
+    {
+        uart_tx_buffer[i] = 0;
     }
 }
 
@@ -39,15 +48,21 @@ void init_buffers(void)
 void uart_rx_irq(void *CallBackRef)
 {
     NX4IO_SSEG_setDecPt(SSEGLO, DIGIT0, dprx_on);
-    if (!uart_processing)
+    if (!uart_rx_processing)
     {
         // use low level library to read tell buffer is clear
         while(!XUartLite_IsReceiveEmpty(UARLITE_BASE_ADDR)) {
             // receiving the byte hear clears the buffer
-            uart_buffer[uart_buff_len] = XUartLite_RecvByte(UARLITE_BASE_ADDR);
-            uart_buff_len += 1;
+            uart_rx_buffer[uart_rx_buff_len] = XUartLite_RecvByte(UARLITE_BASE_ADDR);
+            uart_rx_buff_len += 1;
             uart_rx = true;
         }
     }
     dprx_on = (dprx_on) ? false : true;
+}
+
+//UART TX IRQ
+void uart_tx_irq(void *CallBackRef, unsigned int EventData)
+{
+    TotalSentCount = EventData; 
 }

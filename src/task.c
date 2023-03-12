@@ -71,9 +71,17 @@ void processing_state(void)
     // this way we just handle the last command given.
     // uart_buff_len always points to the next slot so last
     // message is N-1
-    uint32_t last_message = uart_buff_len - 1;
-    uart_msg = uart_buffer[last_message];
+    uint32_t last_message = uart_rx_buff_len - 1;
+    uart_msg = uart_rx_buffer[last_message];
+    uart_tx_buffer[0] = uart_rx_buffer[last_message];
     // 8-bit packet with bit0 == right direction and bit1 == left direction
+    
+    //test send back same message message
+    XUartLite_Send(&UART_Inst, &uart_tx_buffer[0], SEND_BUFF_SIZE); 
+    
+    //send interrupt not working (IRQ handler not getting called)
+    //while(TotalSentCount != SEND_BUFF_SIZE){}; 
+
     if (1 == DEBUG)
     {
         xil_printf("packet message was %d\r\n", uart_msg);
@@ -135,7 +143,7 @@ void end_state(void)
     // say we have processed data for next run
     uart_rx = false;
     // reset buffer pointer
-    uart_buff_len = 0;
+    uart_rx_buff_len = 0;
     // clear any data that came in while we processed
     XUartLite_ResetFifos(&UART_Inst);
     // re-enable the interrupt

@@ -85,12 +85,17 @@ int system_init(void) {
 		return XST_FAILURE;
 	}
 	status = XIntc_Connect(&INTC_Inst, UARTLITE_INTR_NUM,
-						(XInterruptHandler)uart_rx_irq,
+						(XInterruptHandler)XUartLite_InterruptHandler,
 						(void *)&UART_Inst);
     if (status != XST_SUCCESS)
     {
         return XST_FAILURE;
     }
+
+	/* set send and receive handlers */
+	XUartLite_SetSendHandler(&UART_Inst, uart_tx_irq, &UART_Inst);
+	XUartLite_SetRecvHandler(&UART_Inst, uart_rx_irq, &UART_Inst);
+	
 
     // start the interrupt controller such that interrupts are enabled for
 	// all devices that cause interrupts.
