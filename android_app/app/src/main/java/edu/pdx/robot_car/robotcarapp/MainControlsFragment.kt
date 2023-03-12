@@ -8,6 +8,7 @@
  */
 package edu.pdx.robot_car.robotcarapp
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Message
 import android.util.Log
@@ -15,6 +16,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import edu.pdx.robot_car.robotcarapp.databinding.FragmentMainControlsBinding
@@ -35,6 +37,7 @@ class MainControlsFragment : Fragment() {
 
     private var binding: FragmentMainControlsBinding? = null
     private val sharedViewModel: MotorDataViewModel by activityViewModels()
+    private val directionMessage = "Current motor direction is"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,6 +49,7 @@ class MainControlsFragment : Fragment() {
         return fragmentBinding.root
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -60,23 +64,27 @@ class MainControlsFragment : Fragment() {
         binding?.up?.setOnClickListener{
             sharedViewModel.updateMotor((0))
             packageDataAndSend()
+            binding?.directionStatus?.text = "$directionMessage up"
             // For the up counter, I tried using the XML to directly print the value instead of adjusting it here.
-            Log.d("MainControlsFragment","Up Counter: ${sharedViewModel.upCounter.value}")
+            //Log.d("MainControlsFragment","Up Counter: ${sharedViewModel.upCounter.value}")
         }
         binding?.right?.setOnClickListener{
             sharedViewModel.updateMotor((1))
             packageDataAndSend()
-            binding?.rightCount?.text = "Right Counter: ${sharedViewModel.rightCounter.value}"
+            binding?.directionStatus?.text = "$directionMessage right"
+            //binding?.rightCount?.text = "Right Counter: ${sharedViewModel.rightCounter.value}"
         }
         binding?.down?.setOnClickListener{
             sharedViewModel.updateMotor((2))
             packageDataAndSend()
-            binding?.downCount?.text = "Down Counter: ${sharedViewModel.downCounter.value}"
+            binding?.directionStatus?.text = "$directionMessage down"
+            //binding?.downCount?.text = "Down Counter: ${sharedViewModel.downCounter.value}"
         }
         binding?.left?.setOnClickListener{
             sharedViewModel.updateMotor((3))
             packageDataAndSend()
-            binding?.leftCount?.text = "Left Counter: ${sharedViewModel.leftCounter.value}"
+            binding?.directionStatus?.text = "$directionMessage left"
+            //binding?.leftCount?.text = "Left Counter: ${sharedViewModel.leftCounter.value}"
         }
 
         binding?.motorStatusButton?.setOnClickListener{
@@ -85,6 +93,7 @@ class MainControlsFragment : Fragment() {
         binding?.videoFeedButton?.setOnClickListener{
             findNavController().navigate(R.id.action_mainControlsFragment_to_videoFeedFragment)
         }
+
     }
 
     /**
