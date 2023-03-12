@@ -54,9 +54,7 @@ class WelcomeFragment : Fragment() {
         if (!isConnected()) {
             Log.d(TAG, "Internet connection NOT available")
             Toast.makeText(context, "Internet connection NOT available", Toast.LENGTH_LONG).show()
-            // TODO: Disable Connect button if internet connection is not available?
-            // TODO: Or take some other action?
-            // Note: The original example app called finish() but that function does not work in a fragment
+            activity?.finish()
         } else {
             Log.d(TAG, "Connected to the Internet")
             Toast.makeText(context, "Connected to the Internet", Toast.LENGTH_LONG).show()
