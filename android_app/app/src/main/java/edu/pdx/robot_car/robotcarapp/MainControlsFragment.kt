@@ -9,17 +9,17 @@
 package edu.pdx.robot_car.robotcarapp
 
 import android.os.Bundle
+import android.os.Message
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import edu.pdx.robot_car.robotcarapp.databinding.FragmentMainControlsBinding
-import edu.pdx.robot_car.robotcarapp.databinding.FragmentWelcomeBinding
 import edu.pdx.robot_car.robotcarapp.model.MotorDataViewModel
+import org.json.JSONObject
 
 /**
  * @fragment MainControlsFragment
@@ -31,20 +31,10 @@ import edu.pdx.robot_car.robotcarapp.model.MotorDataViewModel
  * @priority MEDIUM (necessary)
  */
 
-
-// Credit for the arrow icons:
-//<a href="https://www.flaticon.com/free-icons/arrow" title="arrow icons">Arrow icons created by Freepik - Flaticon</a>
-// TODO: Put this credit in a better place or make our own icons
-
 class MainControlsFragment : Fragment() {
 
     private var binding: FragmentMainControlsBinding? = null
     private val sharedViewModel: MotorDataViewModel by activityViewModels()
-
-    var moveUp: Boolean = false
-    var moveDown: Boolean = false
-    var moveRight: Boolean = false
-    var moveLeft: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,19 +42,42 @@ class MainControlsFragment : Fragment() {
     ): View? {
         val fragmentBinding = FragmentMainControlsBinding.inflate(inflater, container, false)
         binding = fragmentBinding
+        Log.d("Main Controls Fragment: ","Fragment Created")
         return fragmentBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+            binding?.apply {
+                lifecycleOwner = viewLifecycleOwner
+                viewModel = sharedViewModel
+                mainControlsFragment = this@MainControlsFragment
+            }
+
+
         // Set listeners for each button
-        // TODO: Export this to MotorDataViewModel. On click, something should trigger MotorDataView model to update the data
         binding?.up?.setOnClickListener{
-            moveUp = true
-            Toast.makeText(context,"Up Button Pressed", Toast.LENGTH_SHORT).show()
+            sharedViewModel.updateMotor((0))
+            packageDataAndSend()
+            // For the up counter, I tried using the XML to directly print the value instead of adjusting it here.
+            Log.d("MainControlsFragment","Up Counter: ${sharedViewModel.upCounter.value}")
         }
-        // TODO: Add this functionality for the other 3 buttons too
+        binding?.right?.setOnClickListener{
+            sharedViewModel.updateMotor((1))
+            packageDataAndSend()
+            binding?.rightCount?.text = "Right Counter: ${sharedViewModel.rightCounter.value}"
+        }
+        binding?.down?.setOnClickListener{
+            sharedViewModel.updateMotor((2))
+            packageDataAndSend()
+            binding?.downCount?.text = "Down Counter: ${sharedViewModel.downCounter.value}"
+        }
+        binding?.left?.setOnClickListener{
+            sharedViewModel.updateMotor((3))
+            packageDataAndSend()
+            binding?.leftCount?.text = "Left Counter: ${sharedViewModel.leftCounter.value}"
+        }
 
         binding?.motorStatusButton?.setOnClickListener{
             findNavController().navigate(R.id.action_mainControlsFragment_to_motorStatusFragment)
@@ -72,6 +85,27 @@ class MainControlsFragment : Fragment() {
         binding?.videoFeedButton?.setOnClickListener{
             findNavController().navigate(R.id.action_mainControlsFragment_to_videoFeedFragment)
         }
+    }
+
+    /**
+     * @function packageDataAndSend
+     * Takes in the state of the motor directs from latest motor update
+     * Packages the data, and uses publishMQQTMessage method in the MotorDataViewModel
+     * to send the message over MQTT
+     */
+    private fun packageDataAndSend(){
+        val messageJSON = JSONObject()
+        messageJSON.put("UP", sharedViewModel.upCounter.value)
+        messageJSON.put("DOWN", sharedViewModel.downCounter.value)
+        messageJSON.put("RIGHT", sharedViewModel.rightCounter.value)
+        messageJSON.put("LEFT", sharedViewModel.leftCounter.value)
+        val message = messageJSON.toString()
+        sharedViewModel.publishMQTTMessage(ROBOT_CAR_CONTROL, message)
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d("Main Controls Fragment: ","Fragment Destroyed")
+        binding = null
     }
 }
 

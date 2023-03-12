@@ -12,4 +12,6 @@ const val MQTT_CLIENT_ID        = ""
 const val MQTT_USERNAME         = ""
 const val MQTT_PWD              = ""
 
+
 // topics and messages
+const val ROBOT_CAR_CONTROL     = "RobotCar/Move"

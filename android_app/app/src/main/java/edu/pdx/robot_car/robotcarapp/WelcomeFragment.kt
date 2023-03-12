@@ -28,8 +28,6 @@ import org.eclipse.paho.client.mqttv3.*
 class WelcomeFragment : Fragment() {
 
     private var binding: FragmentWelcomeBinding? = null
-    private lateinit var mqttClient : MQTTClient
-    private lateinit var mqttClientID: String
     private val sharedViewModel: MotorDataViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -38,34 +36,38 @@ class WelcomeFragment : Fragment() {
     ): View? {
         val fragmentBinding = FragmentWelcomeBinding.inflate(inflater, container, false)
         binding = fragmentBinding
+        Log.d("WelcomeFragment: ","Fragment Created")
         return fragmentBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding?.apply {
+            lifecycleOwner = viewLifecycleOwner
+            viewModel = sharedViewModel
+            welcomeFragment = this@WelcomeFragment
+        }
+
         // Check if Internet connection is available
         // exit if it is not
         if (!isConnected()) {
             Log.d(TAG, "Internet connection NOT available")
             Toast.makeText(context, "Internet connection NOT available", Toast.LENGTH_LONG).show()
-            //finish()
+            activity?.finish()
         } else {
             Log.d(TAG, "Connected to the Internet")
             Toast.makeText(context, "Connected to the Internet", Toast.LENGTH_LONG).show()
         }
 
-        // Assign user-entered or default values to the MQTT Settings
-        val mqttNetwork: String = binding?.MQTTNetwork?.text.toString() ?: MQTT_SERVER_URI
-        val mqttKey: String = binding?.MQTTKey?.text.toString() ?: MQTT_CLIENT_ID
-        val mqttUsername: String = binding?.MQTTUsername?.text.toString() ?: MQTT_USERNAME
-        val mqttPassword: String = binding?.MQTTPassword?.text.toString() ?: MQTT_PWD
-
+        val mqttNetwork: String =  if (binding?.MQTTNetwork?.text.toString() != "") binding?.MQTTNetwork?.text.toString() else MQTT_SERVER_URI
+        val mqttKey: String =      if (binding?.MQTTKey?.text.toString() != "") binding?.MQTTKey?.text.toString() else MQTT_CLIENT_ID
+        val mqttUsername: String = if (binding?.MQTTUsername?.text.toString() != "") binding?.MQTTUsername?.text.toString() else MQTT_USERNAME
+        val mqttPassword: String = if (binding?.MQTTPassword?.text.toString() != "") binding?.MQTTPassword?.text.toString() else MQTT_PWD
 
         // open mQTT Broker communication
-        mqttClientID = MqttClient.generateClientId()
-        mqttClient = MQTTClient(context, mqttNetwork, mqttClientID)
-
+        sharedViewModel.mqttClientID = MqttClient.generateClientId()
+        sharedViewModel.mqttClient = MQTTClient(context, mqttNetwork, sharedViewModel.mqttClientID)
 
         // When they click the button, navigate to the next screen
         binding?.apply {
@@ -73,7 +75,12 @@ class WelcomeFragment : Fragment() {
             // TODO: Add key and custom username/password to the connect function
             // TODO: Export some of the MQTT functionality to the ViewModel since it is data-related, not UI-related
             connectButton.setOnClickListener {
-                mqttClient.connect(
+
+                // open mQTT Broker communication
+                sharedViewModel.mqttClientID = MqttClient.generateClientId()
+                sharedViewModel.mqttClient = MQTTClient(context, mqttNetwork, sharedViewModel.mqttClientID)
+
+                sharedViewModel.mqttClient.connect(
                     mqttUsername,
                     mqttPassword,
                     object : IMqttActionListener {
@@ -83,7 +90,7 @@ class WelcomeFragment : Fragment() {
                             Toast.makeText(context, successMsg, Toast.LENGTH_LONG).show()
 
                             // subscribe to motor status topics
-                            //subscribeToStatus(STS_TOPIC)
+                            subscribeToStatus("emdevlin/testMessage")
                         }
 
                         override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
@@ -101,13 +108,13 @@ class WelcomeFragment : Fragment() {
                             Log.d(TAG, msg)
 
                             // since a message arrived I'm assuming that the topic string is not null
-                            /*if (topic!! == STS_TOPIC) {
-                               // do something
-                            //}
+                            if (topic!! == "emdevlin/testMessage") {
+                               sharedViewModel.updateDownCounter(message.toString())
+                            }
 
                             else {
                                 Log.d(TAG, "Received invalid topic: $topic")
-                            }*/
+                            }
                         }
 
                         override fun connectionLost(cause: Throwable?) {
@@ -142,8 +149,8 @@ class WelcomeFragment : Fragment() {
 
     private fun subscribeToStatus(subscribeTopic: String) {
         // subscribe to status topic only if connected to broker
-        if (mqttClient.isConnected()) {
-            mqttClient.subscribe(
+        if (sharedViewModel.mqttClient.isConnected()) {
+            sharedViewModel.mqttClient.subscribe(
                 topic = subscribeTopic,
                 qos = 1,
                 object : IMqttActionListener {
@@ -165,6 +172,12 @@ class WelcomeFragment : Fragment() {
         } else {
             Log.d(TAG, "Cannot subscribe to $subscribeTopic: Not connected to server")
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d("Welcome Fragment: ","Fragment Destroyed")
+        binding = null
     }
 
 }
