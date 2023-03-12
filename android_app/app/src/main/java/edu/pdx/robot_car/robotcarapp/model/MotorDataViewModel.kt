@@ -17,8 +17,11 @@ class MotorDataViewModel: ViewModel() {
     private val _MQTT_username = MutableLiveData<String>()
     val MQTT_username: LiveData<String> = _MQTT_username
 
-    private val _motor1_speed = MutableLiveData<Double>()
-    val motor1_speed: LiveData<Double> = _motor1_speed
+    private val _motor1_speed = MutableLiveData<Float>()
+    val motor1_speed: LiveData<Float> = _motor1_speed
+
+    private val _motor2_speed = MutableLiveData<Float>()
+    val motor2_speed: LiveData<Float> = _motor2_speed
 
     private val _motor1_position = MutableLiveData<String>()
     val motor1_position: LiveData<String> = _motor1_position
@@ -41,8 +44,11 @@ class MotorDataViewModel: ViewModel() {
 
     // This is an example of a method the ViewModel can do
     // Basically any interaction with or manipulation of the data that doesn't have to do with the UI
-    fun setSpeed(RPM: Double) {
-        _motor1_speed.value = RPM
+    fun updateSpeed(RPM: Float, motorNumber: Int) {
+        when (motorNumber) {
+            1 -> _motor1_speed.value = RPM
+            2 -> _motor2_speed.value = RPM
+        }
     }
 
     /*

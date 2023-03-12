@@ -90,7 +90,7 @@ class WelcomeFragment : Fragment() {
                             Toast.makeText(context, successMsg, Toast.LENGTH_LONG).show()
 
                             // subscribe to motor status topics
-                            subscribeToStatus("emdevlin/testMessage")
+                            subscribeToStatus(ROBOT_CAR_STATUS)
                         }
 
                         override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
@@ -108,11 +108,11 @@ class WelcomeFragment : Fragment() {
                             Log.d(TAG, msg)
 
                             // since a message arrived I'm assuming that the topic string is not null
-                            if (topic!! == "emdevlin/testMessage") {
-                               sharedViewModel.updateDownCounter(message.toString())
-                            }
-
-                            else {
+                            if (topic!! == ROBOT_CAR_STATUS){
+                                // TODO: Parse the message since both motors might be sent in the same message
+                                // TODO: Or add sub-topics
+                                sharedViewModel.updateSpeed(message.toString().toFloat(), 1)
+                            } else {
                                 Log.d(TAG, "Received invalid topic: $topic")
                             }
                         }

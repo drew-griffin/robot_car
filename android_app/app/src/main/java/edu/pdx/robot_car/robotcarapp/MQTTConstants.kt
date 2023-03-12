@@ -15,3 +15,4 @@ const val MQTT_PWD              = ""
 
 // topics and messages
 const val ROBOT_CAR_CONTROL     = "RobotCar/Move"
+const val ROBOT_CAR_STATUS      = "RobotCar/Status"
