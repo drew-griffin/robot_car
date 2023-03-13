@@ -20,6 +20,7 @@
 #include "cntrl_logic.h"
 #include "microblaze_sleep.h"
 #include "uart.h"
+#include "debug.h"
 
 /********************Control Constants********************/
 #define NBTNS                           5
@@ -160,6 +161,10 @@ void set_wheel_directions(bool left_wheel, bool right_wheel)
 {
 	leftMotorForward = left_wheel;
 	rightMotorForward = right_wheel;
+	if (1 == DEBUG)
+	{
+		xil_printf("left wheel is %d and right wheel is %d\r\n", leftMotorForward, rightMotorForward);
+	}
 }
 
 /**
@@ -172,6 +177,10 @@ void set_wheel_directions(bool left_wheel, bool right_wheel)
 */
 void run_motors(bool flag)
 {
+	if (1 == DEBUG)
+	{
+		xil_printf("For motor run left wheel is %d and right wheel is %d\r\n", leftMotorForward, rightMotorForward);
+	}
 	if(flag)
 	{
 		HB3_setPWM(HB3_LEFT_BA, pwmEnable, setpoint, leftMotorForward);

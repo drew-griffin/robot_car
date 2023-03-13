@@ -27,7 +27,6 @@ void init_buffers(void)
 {
     uart_rx = false;
     uart_rx_buff_len = false;
-    uart_rx_processing = false;
     for(int i = 0; i < UART_BUFF_SIZE; i++) 
     {
         uart_rx_buffer[i] = 0;
@@ -48,15 +47,12 @@ void init_buffers(void)
 void uart_rx_irq(void *CallBackRef)
 {
     NX4IO_SSEG_setDecPt(SSEGLO, DIGIT0, dprx_on);
-    if (!uart_rx_processing)
-    {
-        // use low level library to read tell buffer is clear
-        while(!XUartLite_IsReceiveEmpty(UARLITE_BASE_ADDR)) {
-            // receiving the byte hear clears the buffer
-            uart_rx_buffer[uart_rx_buff_len] = XUartLite_RecvByte(UARLITE_BASE_ADDR);
-            uart_rx_buff_len += 1;
-            uart_rx = true;
-        }
+    // use low level library to read tell buffer is clear
+    while(!XUartLite_IsReceiveEmpty(UARLITE_BASE_ADDR)) {
+        // receiving the byte hear clears the buffer
+        uart_rx_buffer[uart_rx_buff_len] = XUartLite_RecvByte(UARLITE_BASE_ADDR);
+        uart_rx_buff_len += 1;
+        uart_rx = true;
     }
     dprx_on = (dprx_on) ? false : true;
 }

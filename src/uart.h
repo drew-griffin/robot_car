@@ -41,7 +41,6 @@ XUartLite   UART_Inst; // UART instance
 uint8_t uart_rx_buffer[UART_BUFF_SIZE];
 bool uart_rx;
 uint32_t uart_rx_buff_len;
-bool uart_rx_processing;
 
 uint8_t uart_tx_buffer[SEND_BUFF_SIZE];
 bool uart_tx;

@@ -37,9 +37,6 @@ int main()
     NX4IO_setLEDs(0x00000000); // clear LEDs, odd behavior where they turn on
     while(1)
     {
-        // read_user_IO(uIO);
-        // update_pid(uIO);
-        // display();
         task_scheduler[run_state_t]();
     }
     

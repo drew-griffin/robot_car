@@ -23,6 +23,7 @@
 #include "debug.h"
 #include "cntrl_logic.h"
 #include "microblaze_sleep.h"
+#include "myHB3IP.h"
 
 // shared global state
 extern task_t  run_state_t;
@@ -73,19 +74,13 @@ void processing_state(void)
     // message is N-1
     uint32_t last_message = uart_rx_buff_len - 1;
     uart_msg = uart_rx_buffer[last_message];
-    uart_tx_buffer[0] = uart_rx_buffer[last_message];
-    // 8-bit packet with bit0 == right direction and bit1 == left direction
-    
-    //test send back same message message
-    XUartLite_Send(&UART_Inst, &uart_tx_buffer[0], SEND_BUFF_SIZE); 
-    
-    //send interrupt not working (IRQ handler not getting called)
-    //while(TotalSentCount != SEND_BUFF_SIZE){}; 
 
     if (1 == DEBUG)
     {
         xil_printf("packet message was %d\r\n", uart_msg);
     }
+
+     // 8-bit packet with bit0 == right direction and bit1 == left direction
     bool right_wheel = right_direction[(uart_msg & GET_DIR)];
     bool left_wheel = left_direction[((uart_msg >> 1) & GET_DIR)];
     set_wheel_directions(left_wheel, right_wheel);
@@ -124,6 +119,12 @@ void run_state(void)
     run_motors(true);
     while(run_count <= motor_run_time)
     {
+        if(!XUartLite_IsSending(&UART_Inst))
+        {
+            uart_tx_buffer[0] = HB3_getRPM(HB3_LEFT_BA);
+            uart_tx_buffer[1] = HB3_getRPM(HB3_RIGHT_BA);
+            XUartLite_Send(&UART_Inst, &uart_tx_buffer[0], 2);
+        }
         display();
     } // wait here for the requeset time
     running_motors = false;
