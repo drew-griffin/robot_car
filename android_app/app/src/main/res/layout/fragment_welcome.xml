@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+
+    tools:context=".WelcomeFragment">
+    <data>
+        <variable
+            name="viewModel"
+            type="edu.pdx.robot_car.robotcarapp.model.MotorDataViewModel" />
+        <variable
+            name="welcomeFragment"
+            type="edu.pdx.robot_car.robotcarapp.WelcomeFragment" />
+    </data>
+<FrameLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainControlsFragment">
+    android:layout_height="match_parent">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -21,30 +32,68 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="@dimen/side_margin"
-                android:text="User will enter Settings Info here"
+                android:text="Welcome to our app! Please enter your settings."
                 android:textAppearance="?attr/textAppearanceHeadline4"
                 android:textColor="@color/material_on_background_emphasis_medium" />
 
-            <Button
-                android:id="@+id/button1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/margin_between_elements"
-                android:minWidth="@dimen/order_cupcake_button_width"
-                android:text="MQTT Network Name: " />
+
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/MQTTNetwork"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="MQTT Network URI"
+                    android:imeOptions="actionDone"
+                    android:singleLine="true"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/MQTTKey"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="MQTT Client ID Key"
+                    android:imeOptions="actionDone"
+                    android:singleLine="true"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/MQTTUsername"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="MQTT Username"
+                    android:imeOptions="actionDone"
+                    android:singleLine="true"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/MQTTPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="MQTT Password"
+                    android:imeOptions="actionDone"
+                    android:singleLine="true"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
-                android:id="@+id/button2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/margin_between_elements"
-                android:minWidth="@dimen/order_cupcake_button_width"
-                android:text="Password: " />
-
-            <Button
-                android:id="@+id/button3"
+                android:id="@+id/connectButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -54,3 +103,4 @@
         </LinearLayout>
     </ScrollView>
 </FrameLayout>
+</layout>

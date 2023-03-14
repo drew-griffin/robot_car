@@ -96,12 +96,12 @@ void run_state(void)
         motor_run_time = 3;
         break;
     case right:
-        motor_run_time = 5;
+        motor_run_time = 1;
         break;
     case left:
-        motor_run_time = 5;
+        motor_run_time = 1;
     case back:
-        motor_run_time = 3;
+        motor_run_time = 2;
         break;
     default:
         // should never get here
@@ -126,7 +126,7 @@ void run_state(void)
             XUartLite_Send(&UART_Inst, &uart_tx_buffer[0], 2);
         }
         display();
-    } // wait here for the requeset time
+    } // wait here for the request time
     running_motors = false;
     run_count = 0;
     run_motors(false);

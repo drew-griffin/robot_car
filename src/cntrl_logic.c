@@ -26,7 +26,7 @@
 #define NBTNS                           5
 
 /********************Local Variables********************/
-static uint16_t setpoint = 512;
+static uint16_t setpoint = 612;
 static bool pwmEnable = true;					// true to enable PWM output
 static bool leftMotorForward = false;	// disregard boolean value, name says it all
 static bool rightMotorForward = true;	// motors have opposite direction for forward movement

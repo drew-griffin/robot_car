@@ -33,9 +33,7 @@ module nexysa7fpga
     JA_in,
     // right motor header
     JB_out,
-    JB_in,
-    // encoder header
-    JC);
+    JB_in);
     
   output RGB2_Blue;
   output RGB2_Green;
@@ -59,7 +57,6 @@ module nexysa7fpga
   input  [1:0] JA_in;
   output [1:0] JB_out;
   input  [1:0] JB_in;
-  input  [7:4] JC;
   output TX;
   input  RX;
 
@@ -94,11 +91,6 @@ module nexysa7fpga
   wire RightMotorEnable;
   wire RightMotorEncoder_A;
   wire RightMotorEncoder_B;
-  // encoder specific variables
-  wire EcA;
-  wire EcB;
-  wire EcBTN;
-  wire EcSW;
 
   // assign signals to the JA Left Motor
   assign JA_out[0]          = LeftMotorDirection;
@@ -110,11 +102,6 @@ module nexysa7fpga
   assign JB_out[1]          = RightMotorEnable;
   assign RightMotorEncoder_A = JB_in[0];
   assign RightMotorEncoder_B = JB_in[1];
-  // assign signals to the JC header for encoder
-  assign EcA   = JC[4]; // E7 
-  assign EcB   = JC[5]; // J3
-  assign EcBTN = JC[6]; // J4
-  assign EcSW  = JC[7]; // E6
                  
   embsys embsys_i
        (.LeftMotorDirection(LeftMotorDirection),
@@ -139,10 +126,6 @@ module nexysa7fpga
         .btnU_0(btnU),
         .clk_100MHz(clk),
         .dp_0(dp),
-        .encA_0(EcB), // switched A and B for clockwise increment
-        .encBTN_0(EcBTN),
-        .encB_0(EcA),
-        .encSWT_0(EcSW),
         .led_0(led),
         .resetn(btnCpuReset),
         .seg_0(seg),

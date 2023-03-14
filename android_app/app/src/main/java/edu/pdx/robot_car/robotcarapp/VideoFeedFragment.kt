@@ -1,3 +1,10 @@
+/**
+ * @fragment VideoFeedFragment
+ * @data     03/09/2023
+ * @brief    This fragment will display a livestream of data being published by the RobotCar in video format.
+ * @priority Low (Stretch goal)
+ */
+
 package edu.pdx.robot_car.robotcarapp
 
 import android.os.Bundle
@@ -5,6 +12,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
+import androidx.navigation.fragment.findNavController
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -35,6 +44,7 @@ class VideoFeedFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_video_feed, container, false)
+
     }
 
     companion object {

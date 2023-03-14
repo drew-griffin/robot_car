@@ -23,7 +23,7 @@
 #include <stdbool.h>
 #include "nexys4io.h"
 #include "xparameters.h"
-#include "PmodENC544.h"
+//#include "PmodENC544.h"
 #include "myHB3IP.h"
 
 /*********Peripheral Device Constants****************************/

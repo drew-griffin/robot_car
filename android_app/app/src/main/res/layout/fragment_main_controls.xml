@@ -1,14 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainControlsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    tools:context=".MainControlsFragment">
+    <data>
+        <variable
+            name="viewModel"
+            type="edu.pdx.robot_car.robotcarapp.model.MotorDataViewModel" />
+        <variable
+            name="mainControlsFragment"
+            type="edu.pdx.robot_car.robotcarapp.MainControlsFragment" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:id="@+id/main_controls_constraint_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical">
 
-</FrameLayout>
+
+        <Button
+            android:id="@+id/motorStatusButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="Motor Status Details"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/directionStatus" />
+
+        <Button
+            android:id="@+id/videoFeedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Live Video"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/motorStatusButton" />
+
+
+        <ImageButton
+            android:id="@+id/up"
+            android:layout_width="78dp"
+            android:layout_height="77dp"
+            android:layout_marginTop="40dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/up_arrow"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/down"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginTop="72dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/down_arrow"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/up" />
+
+        <ImageButton
+            android:id="@+id/right"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="93dp"
+            android:layout_marginBottom="1dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/right_arrow"
+            app:layout_constraintBottom_toTopOf="@+id/down"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/down"
+            app:layout_constraintTop_toBottomOf="@+id/up" />
+
+        <ImageButton
+            android:id="@+id/left"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginStart="93dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/left_arrow"
+            app:layout_constraintBottom_toTopOf="@+id/down"
+            app:layout_constraintEnd_toStartOf="@+id/down"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/up" />
+
+        <TextView
+            android:id="@+id/directionStatus"
+            android:layout_width="342dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="60dp"
+            android:gravity="center"
+            android:textAlignment="textStart"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/down"
+            tools:ignore="RtlCompat"
+            tools:text="Robot is currently going forward" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
