@@ -67,4 +67,41 @@ void set_wheel_directions(bool left_wheel, bool right_wheel);
 
 void run_motors(bool flag);
 
+/**
+ * setpoint_to_duty_cycle
+ * @brief Setpoint in 10bit range to duty cycle 
+ * 
+ * @param setpoint 
+ * @return uint8_t 
+ */
+uint8_t setpoint_to_duty_cycle(uint16_t setpoint); 
+
+/**
+ * duty_cycle_to_rpm
+ * @brief duty cycle to rpm 
+ * 
+ * @param duty_cycle 
+ * @return uint8_t 
+ */
+uint8_t duty_cycle_to_rpm(uint8_t duty_cycle); 
+
+/**
+ * @brief convert from error rpm to setpoint 
+ * @param rpm  
+ * @return uint16_t setpoint 
+ */
+uint16_t setpoint_from_rpm(uint8_t rpm); 
+
+/**
+ * control_pid
+ * @brief main pid control loop 
+ * updates state based on file globals, and the following params
+ * @param MOTOR (left or right)
+ * @param motorDirection (associated with the global leftMotorDirection, rightMotorDirection)
+ * @param *preverror (pointer to the left and right previous error adresses to be updated and used)
+ * @param *i (pointer to the left and right total integration adresses to be updated and used) 
+ */
+void control_pid(uint32_t MOTOR, bool motorDirection, uint8_t *preverror, uint8_t *i);
+
+
 #endif
