@@ -45,6 +45,12 @@ def on_connect(client, userdata, flags, rc):
 def on_subscribe(client, userdata, mid, granted_qos):
     print("Subscribed with QoS: {}".format(granted_qos[0]))
 
+def publish_data(data):
+    client.publish(
+        topic = "RobotCar/Motors",
+        payload = "L: " + str(data[0]) + " R: " + str(data[1])
+    )
+
 # decodes JSON and writes corresponding message to serial port
 def on_message(client, userdata, msg):
     m_decode = str(msg.payload.decode("utf-8","ignore"))
@@ -76,4 +82,15 @@ client.connect (
     keepalive=mqtt_keepalive
  )
 
-client.loop_forever()
+#client.loop_forever()
+loop_count = 0
+while True:
+    client.loop()
+    data = ser.readline()
+    if len(data) > 2:
+        publish_data(data)
+    else:
+        publish_data([0,0])
+    if loop_count % 4 == 0:
+        ser.reset_input_buffer()
+    loop_count += 1

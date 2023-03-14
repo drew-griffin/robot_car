@@ -123,7 +123,8 @@ void run_state(void)
         {
             uart_tx_buffer[0] = HB3_getRPM(HB3_LEFT_BA);
             uart_tx_buffer[1] = HB3_getRPM(HB3_RIGHT_BA);
-            XUartLite_Send(&UART_Inst, &uart_tx_buffer[0], 2);
+            uart_tx_buffer[2] = 0x0A; // \n
+            XUartLite_Send(&UART_Inst, &uart_tx_buffer[0], 3);
         }
         display();
     } // wait here for the request time
