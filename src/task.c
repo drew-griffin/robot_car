@@ -100,6 +100,7 @@ void run_state(void)
         break;
     case left:
         motor_run_time = 1;
+        break; 
     case back:
         motor_run_time = 2;
         break;
