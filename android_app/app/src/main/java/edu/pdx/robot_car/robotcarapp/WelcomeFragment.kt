@@ -60,15 +60,6 @@ class WelcomeFragment : Fragment() {
             Toast.makeText(context, "Connected to the Internet", Toast.LENGTH_LONG).show()
         }
 
-        //val mqttNetwork: String =  if (binding?.MQTTNetwork?.text.toString() != "") binding?.MQTTNetwork?.text.toString() else MQTT_SERVER_URI
-        //val mqttKey: String =      if (binding?.MQTTKey?.text.toString() != "") binding?.MQTTKey?.text.toString() else MQTT_CLIENT_ID
-        //val mqttUsername: String = if (binding?.MQTTUsername?.text.toString() != "") binding?.MQTTUsername?.text.toString() else MQTT_USERNAME
-        //val mqttPassword: String = if (binding?.MQTTPassword?.text.toString() != "") binding?.MQTTPassword?.text.toString() else MQTT_PWD
-
-        // open mQTT Broker communication
-        //sharedViewModel.mqttClientID = MqttClient.generateClientId()
-        //sharedViewModel.mqttClient = MQTTClient(context, mqttNetwork, sharedViewModel.mqttClientID)
-
         // When they click the button, navigate to the next screen
         binding?.apply {
             // Set up the button click listeners
