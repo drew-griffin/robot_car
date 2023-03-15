@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toolbar
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -34,12 +35,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main){
     }
 
     /**
-     * @todo implement how we want to handle the action bar back
-     * the hardware Android back button goes to the previous screen
-     * so maybe the Action back button can just back to the welcome screen?
+     * Enables Back button in navigation toolbar
      */
     override fun onSupportNavigateUp(): Boolean {
-        Log.d("Activity", "implement navigate up controller")
-        return true
+        val navController = findNavController(R.id.nav_host_fragment)
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 }
