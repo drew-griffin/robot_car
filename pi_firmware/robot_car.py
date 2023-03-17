@@ -89,7 +89,8 @@ client.connect (
 loop_count = 0
 while True:
     client.loop()
-    data = ser.readline()
+    data = ser.read(5)
+    print(data)
     if len(data) == 5:
         if data[4] == 10:
             left = "{}{}".format(data[0:1].decode("utf-8"), int.from_bytes(data[1:2], "big"))
@@ -97,6 +98,6 @@ while True:
             publish_data(left, right)
     elif len(data) == 0:
         publish_data("0","0")
-    if loop_count % 2 == 0:
-        ser.reset_input_buffer()
-    loop_count += 1
+   # if loop_count % 2 == 0:
+   #     ser.reset_input_buffer()
+   # loop_count += 1
