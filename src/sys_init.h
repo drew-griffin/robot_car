@@ -26,7 +26,7 @@
 /**
  * system_init() - sets up the system startup code
  * 
- * @return if system initialization was sucessfull
+ * @return if system initialization was successful
 */
 int system_init(void);
 

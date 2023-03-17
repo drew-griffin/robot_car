@@ -1,3 +1,4 @@
+
 """
 ECE 558 Final Project: Robot Car
 Team Members: Emily Devlin, Noah Page, Drew Seidel, Stephen Weeks
@@ -5,7 +6,7 @@ Team Members: Emily Devlin, Noah Page, Drew Seidel, Stephen Weeks
 This program runs on the RPI and connects to the MQTT Mosquitto server on the RPI.
 It receives JSON messages sent from the Android App on the RobotCar/Move topic,
 and passes on the corresponding hex number to the FPGA on the UART to control
-the robot's movement. 
+the robot's movement.
 
 Sample JSON message: {"UP":1,"DOWN":0,"RIGHT":0,"LEFT":0}
 
@@ -24,7 +25,7 @@ from config import *
 import paho.mqtt.client as mqtt
 client = mqtt.Client()
 
-ser = serial.Serial ('/dev/ttyS0', 9600, serial.EIGHTBITS, serial.PARITY_NONE)
+ser = serial.Serial ('/dev/ttyS0', 9600, serial.EIGHTBITS, serial.PARITY_NONE, timeout = 0.1)
 
 # MQTT callback methods
 def on_connect(client, userdata, flags, rc):
@@ -45,12 +46,14 @@ def on_connect(client, userdata, flags, rc):
 def on_subscribe(client, userdata, mid, granted_qos):
     print("Subscribed with QoS: {}".format(granted_qos[0]))
 
-def publish_data(data):
+def publish_data(left, right):
+    topic_msg = {
+        f"Left_Motor": f"{left}", f"Right_Motor": f"{right}"
+        }
     client.publish(
         topic = "RobotCar/Motors",
-        payload = "L: " + str(data[0]) + " R: " + str(data[1])
+        payload = json.dumps(topic_msg)
     )
-
 # decodes JSON and writes corresponding message to serial port
 def on_message(client, userdata, msg):
     m_decode = str(msg.payload.decode("utf-8","ignore"))
@@ -87,10 +90,13 @@ loop_count = 0
 while True:
     client.loop()
     data = ser.readline()
-    if len(data) > 2:
-        publish_data(data)
-    else:
-        publish_data([0,0])
-    if loop_count % 4 == 0:
+    if len(data) == 5:
+        if data[4] == 10:
+            left = "{}{}".format(data[0:1].decode("utf-8"), int.from_bytes(data[1:2], "big"))
+            right = "{}{}".format(data[2:3].decode("utf-8"), int.from_bytes(data[3:4], "big"))
+            publish_data(left, right)
+    elif len(data) == 0:
+        publish_data("0","0")
+    if loop_count % 2 == 0:
         ser.reset_input_buffer()
     loop_count += 1

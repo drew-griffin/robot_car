@@ -31,7 +31,7 @@
 #define UARTLITE_INTR_NUM       XPAR_INTC_0_UARTLITE_0_VEC_ID
 #define UARLITE_BASE_ADDR       XPAR_UARTLITE_0_BASEADDR
 #define UART_BUFF_SIZE          1024 // kilobyte of data
-#define SEND_BUFF_SIZE          3 // byte of data
+#define SEND_BUFF_SIZE          5 // bytes of data
 #define CHARACTER_MASK          48
 
 // UART instance

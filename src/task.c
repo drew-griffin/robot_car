@@ -42,6 +42,7 @@ static bool left_direction[2] = {false, true};
 static bool right_direction[2] = {true, false};
 static uint8_t uart_msg;
 enum run_times {forward, right, left, back};
+static bool left_wheel, right_wheel;
 
 /**************** Local Funcs ****************/
 static void display_data(void);
@@ -81,8 +82,8 @@ void processing_state(void)
     }
 
      // 8-bit packet with bit0 == right direction and bit1 == left direction
-    bool right_wheel = right_direction[(uart_msg & GET_DIR)];
-    bool left_wheel = left_direction[((uart_msg >> 1) & GET_DIR)];
+    right_wheel = right_direction[(uart_msg & GET_DIR)];
+    left_wheel = left_direction[((uart_msg >> 1) & GET_DIR)];
     set_wheel_directions(left_wheel, right_wheel);
     run_state_t = run;
 }
@@ -100,9 +101,9 @@ void run_state(void)
         break;
     case left:
         motor_run_time = 1;
-        break; 
+        break;
     case back:
-        motor_run_time = 2;
+        motor_run_time = 3;
         break;
     default:
         // should never get here
@@ -122,10 +123,15 @@ void run_state(void)
     {
         if(!XUartLite_IsSending(&UART_Inst))
         {
-            uart_tx_buffer[0] = HB3_getRPM(HB3_LEFT_BA);
-            uart_tx_buffer[1] = HB3_getRPM(HB3_RIGHT_BA);
-            uart_tx_buffer[2] = 0x0A; // \n
-            XUartLite_Send(&UART_Inst, &uart_tx_buffer[0], 3);
+        	uart_tx_buffer[0] = (left_wheel) ? 0x2D : 0x2B;
+            uart_tx_buffer[1] = HB3_getRPM(HB3_LEFT_BA);
+            uart_tx_buffer[2] = (right_wheel) ? 0x2B : 0x2D;
+            uart_tx_buffer[3] = HB3_getRPM(HB3_RIGHT_BA);
+            uart_tx_buffer[4] = 0x0A; // \n
+            if((uart_tx_buffer[1] != 0) && (uart_tx_buffer[3] != 0))
+            {
+            	XUartLite_Send(&UART_Inst, &uart_tx_buffer[0], 5);
+            }
         }
         display();
     } // wait here for the request time
