@@ -146,9 +146,9 @@ class MotorDataViewModel: ViewModel() {
         val rightRPM = motorData.getString("Right_Motor").toInt().toFloat()
         updateSpeed(leftRPM, 1)
         updateSpeed(rightRPM, 2)
-        Log.d("Motor Data View Model","Left Motor Speed: $motor1_speed.value")
-        Log.d("Motor Data View Model","_Left Motor Speed: $_motor1_speed.value")
-        Log.d("Motor Data View Model","Right Motor Speed: $motor2_speed.value")
-        Log.d("Motor Data View Model","_Right Motor Speed: $_motor2_speed.value")
+        Log.d("Motor Data View Model","Left Motor Speed: ${motor1_speed.value}")
+        Log.d("Motor Data View Model","_Left Motor Speed: ${_motor1_speed.value}")
+        Log.d("Motor Data View Model","Right Motor Speed: ${motor2_speed.value}")
+        Log.d("Motor Data View Model","_Right Motor Speed: ${_motor2_speed.value}")
     }
 }
