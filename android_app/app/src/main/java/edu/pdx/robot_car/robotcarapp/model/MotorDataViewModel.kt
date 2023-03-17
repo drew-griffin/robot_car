@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import edu.pdx.robot_car.robotcarapp.MQTTClient
 import org.eclipse.paho.client.mqttv3.*
+import org.json.JSONObject
 
 class MotorDataViewModel: ViewModel() {
 
@@ -130,4 +131,20 @@ class MotorDataViewModel: ViewModel() {
               Log.d("MQTT msg:", "Impossible to publish, no server connected")
           }
       }
+
+    /**
+     * @method parseMQTTMessage
+     * @param message of type MqttMessage.
+     *
+     * @brief This function takes in a received MQTT message, parses it, and updates the necessary
+     * Live Data objects with new values, depending on the message topic and content
+     * todo: If we add other sensor data, it can be parsed here too
+     */
+    fun parseMQTTMessage(message: MqttMessage?) {
+        val motorData = JSONObject(message.toString())
+        val leftRPM = motorData.getString("Left_Motor").toInt().toFloat()
+        val rightRPM = motorData.getString("Right_Motor").toInt().toFloat()
+        updateSpeed(leftRPM, 1)
+        updateSpeed(rightRPM, 2)
+    }
 }
