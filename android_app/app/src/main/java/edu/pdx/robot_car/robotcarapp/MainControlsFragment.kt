@@ -9,6 +9,7 @@
 package edu.pdx.robot_car.robotcarapp
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,9 +18,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.github.anastr.speedviewlib.components.Style
 import edu.pdx.robot_car.robotcarapp.databinding.FragmentMainControlsBinding
 import edu.pdx.robot_car.robotcarapp.model.MotorDataViewModel
 import org.json.JSONObject
+import java.util.*
 
 /**
  * @fragment MainControlsFragment
@@ -36,6 +39,8 @@ class MainControlsFragment : Fragment() {
     private var binding: FragmentMainControlsBinding? = null
     private val sharedViewModel: MotorDataViewModel by activityViewModels()
     private val directionMessage = "Current motor direction is"
+
+    private var motor1 = true       // which motor's info to display
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,6 +62,9 @@ class MainControlsFragment : Fragment() {
                 mainControlsFragment = this@MainControlsFragment
             }
 
+        // Both motor detail gauges start off invisible
+        binding?.speedView?.visibility = View.VISIBLE
+        binding?.speedView2?.visibility = View.INVISIBLE
 
         // Set listeners for each button
         binding?.up?.setOnClickListener{
@@ -70,24 +78,52 @@ class MainControlsFragment : Fragment() {
             sharedViewModel.updateMotor((1))
             packageDataAndSend()
             binding?.directionStatus?.text = "$directionMessage right"
-            //binding?.rightCount?.text = "Right Counter: ${sharedViewModel.rightCounter.value}"
         }
         binding?.down?.setOnClickListener{
             sharedViewModel.updateMotor((2))
             packageDataAndSend()
             binding?.directionStatus?.text = "$directionMessage down"
-            //binding?.downCount?.text = "Down Counter: ${sharedViewModel.downCounter.value}"
         }
         binding?.left?.setOnClickListener{
             sharedViewModel.updateMotor((3))
             packageDataAndSend()
             binding?.directionStatus?.text = "$directionMessage left"
-            //binding?.leftCount?.text = "Left Counter: ${sharedViewModel.leftCounter.value}"
         }
 
-        binding?.motorStatusButton?.setOnClickListener{
-            findNavController().navigate(R.id.action_mainControlsFragment_to_motorStatusFragment)
+        binding?.motorToggle?.setOnClickListener{
+            if (!motor1){
+                binding?.speedView?.visibility = View.VISIBLE
+                binding?.speedView2?.visibility = View.INVISIBLE
+                motor1 = true
+            } else {
+                binding?.speedView?.visibility = View.INVISIBLE
+                binding?.speedView2?.visibility = View.VISIBLE
+                motor1 = false
+            }
         }
+
+        binding?.speedView?.apply{
+            unit = " RPM"
+            minSpeed = -50.0F
+            maxSpeed = 50.0F
+            withTremble = false
+            sharedViewModel.motor1_speed.value?.let { speedTo(it) }
+            makeSections(2, Color.CYAN, Style.ROUND)
+            sections[0].color = Color.LTGRAY
+            sections[1].color = Color.GREEN
+        }
+
+        binding?.speedView2?.apply{
+            unit = " RPM"
+            minSpeed = -50.0F
+            maxSpeed = 50.0F
+            withTremble = false
+            sharedViewModel.motor1_speed.value?.let { speedTo(it) }
+            makeSections(2, Color.CYAN, Style.BUTT)
+            sections[0].color = Color.MAGENTA
+            sections[1].color = Color.YELLOW
+        }
+
         binding?.videoFeedButton?.setOnClickListener{
             findNavController().navigate(R.id.action_mainControlsFragment_to_videoFeedFragment)
         }

@@ -23,27 +23,15 @@
 
 
         <Button
-            android:id="@+id/motorStatusButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:text="@string/motor_status_details"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/directionStatus" />
-
-        <Button
             android:id="@+id/videoFeedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:text="@string/live_video"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/motorStatusButton" />
-
+            app:layout_constraintTop_toBottomOf="@+id/speedView" />
 
         <ImageButton
             android:id="@+id/up"
@@ -77,8 +65,8 @@
             android:layout_marginTop="1dp"
             android:layout_marginEnd="93dp"
             android:layout_marginBottom="1dp"
-            android:scaleType="fitXY"
             android:contentDescription="@string/right_arrow"
+            android:scaleType="fitXY"
             android:src="@drawable/right_arrow"
             app:layout_constraintBottom_toTopOf="@+id/down"
             app:layout_constraintEnd_toEndOf="parent"
@@ -103,17 +91,55 @@
         <TextView
             android:id="@+id/directionStatus"
             android:layout_width="342dp"
-            android:layout_height="60dp"
-            android:layout_marginTop="60dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="284dp"
+            android:layout_marginBottom="32dp"
             android:gravity="center"
             android:textAlignment="textStart"
             android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@+id/motorToggle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/down"
+            app:layout_constraintTop_toTopOf="parent"
             tools:ignore="RtlCompat"
             tools:text="Robot is currently going forward" />
+
+        <ToggleButton
+            android:id="@+id/motorToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="240dp"
+            android:text="@string/motor_1"
+            android:textOff="Motor 1 Details. (Click to see Motor 2)"
+            android:textOn="Motor 2 Details. (Click to see Motor 1)"
+            app:layout_constraintBottom_toTopOf="@+id/videoFeedButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/directionStatus" />
+
+        <com.github.anastr.speedviewlib.SpeedView
+            android:id="@+id/speedView"
+            android:layout_width="199dp"
+            android:layout_height="199dp"
+            android:layout_marginTop="449dp"
+            android:layout_marginBottom="15dp"
+            app:layout_constraintBottom_toTopOf="@+id/videoFeedButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.github.anastr.speedviewlib.SpeedView
+            android:id="@+id/speedView2"
+            android:layout_width="199dp"
+            android:layout_height="199dp"
+            android:layout_marginTop="449dp"
+            android:layout_marginBottom="15dp"
+            app:layout_constraintBottom_toTopOf="@+id/videoFeedButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
