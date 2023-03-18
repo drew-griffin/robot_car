@@ -55,15 +55,29 @@ int system_init(void) {
 		return XST_FAILURE;
 	}
 
-	// initialize the UART
-	    status = XUartLite_Initialize(&UART_Inst, UARTLITE_DEVICE_ID);
+	// initialize the UART for the Raspberry Pi 
+	status = XUartLite_Initialize(&UART_Inst_Pi, UARTLITE_DEVICE_ID_PI);
     if (status != XST_SUCCESS)
     {
         return XST_FAILURE;
     }
 
-	// test uart is initialized correctly
-    status = XUartLite_SelfTest(&UART_Inst);
+	// test uart is initialized correctly for the Raspberry Pi 
+    status = XUartLite_SelfTest(&UART_Inst_Pi);
+    if (status != XST_SUCCESS)
+    {
+        return XST_FAILURE;
+    }
+
+	// initialize the UART for the Ultrasonic sensor 
+	status = XUartLite_Initialize(&UART_Inst_Ultra, UARTLITE_DEVICE_ID_ULTRA);
+    if (status != XST_SUCCESS)
+    {
+        return XST_FAILURE;
+    }
+
+	// test uart is initialized correctly for the ultrasonic sensor 
+    status = XUartLite_SelfTest(&UART_Inst_Ultra);
     if (status != XST_SUCCESS)
     {
         return XST_FAILURE;
@@ -84,13 +98,24 @@ int system_init(void) {
 	{
 		return XST_FAILURE;
 	}
-	status = XIntc_Connect(&INTC_Inst, UARTLITE_INTR_NUM,
-						(XInterruptHandler)uart_rx_irq,
-						(void *)&UART_Inst);
+	//setup callback function for pi connection coming into FPGA 
+	status = XIntc_Connect(&INTC_Inst, UARTLITE_INTR_NUM_PI,
+						(XInterruptHandler)uart_rx_pi_irq,
+						(void *)&UART_Inst_Pi);
     if (status != XST_SUCCESS)
     {
         return XST_FAILURE;
     }
+
+	//setup callback function for ultrasonic connection coming into FPGA 
+	status = XIntc_Connect(&INTC_Inst, UARTLITE_INTR_NUM_ULTRA,
+						(XInterruptHandler)uart_rx_ultra_irq,
+						(void *)&UART_Inst_Ultra);
+    if (status != XST_SUCCESS)
+    {
+        return XST_FAILURE;
+    }
+
 
     // start the interrupt controller such that interrupts are enabled for
 	// all devices that cause interrupts.
@@ -102,10 +127,12 @@ int system_init(void) {
 
     // enable/disable the interrupts
 	XIntc_Enable(&INTC_Inst, FIT_INTR_NUM);
-	XIntc_Enable(&INTC_Inst, UARTLITE_INTR_NUM);
+	XIntc_Enable(&INTC_Inst, UARTLITE_INTR_NUM_PI);
+	XIntc_Enable(&INTC_Inst, UARTLITE_INTR_NUM_ULTRA);
 
 	// need to tell the UART that we are enabling the RX/TX buffer interrupts
-	XUartLite_EnableInterrupt(&UART_Inst);
+	XUartLite_EnableInterrupt(&UART_Inst_Pi);
+	XUartLite_EnableInterrupt(&UART_Inst_Ultra);
 	
 	return XST_SUCCESS;
 }

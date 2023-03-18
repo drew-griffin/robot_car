@@ -26,38 +26,60 @@
 #include <stdbool.h>
 
 /**************** Macros ****************/
-// UARTLITE
-#define UARTLITE_DEVICE_ID      XPAR_UARTLITE_0_DEVICE_ID
-#define UARTLITE_INTR_NUM       XPAR_INTC_0_UARTLITE_0_VEC_ID
-#define UARLITE_BASE_ADDR       XPAR_UARTLITE_0_BASEADDR
+// UARTLITE PI (uartlite_0)
+#define UARTLITE_DEVICE_ID_PI      XPAR_UARTLITE_0_DEVICE_ID
+#define UARTLITE_INTR_NUM_PI       XPAR_INTC_0_UARTLITE_0_VEC_ID
+#define UARLITE_BASE_ADDR_PI       XPAR_UARTLITE_0_BASEADDR
+
+// UARTLITE ULTRASONICE SENSOR (uartlite_1)
+#define UARTLITE_DEVICE_ID_ULTRA      XPAR_UARTLITE_2_DEVICE_ID
+#define UARTLITE_INTR_NUM_ULTRA       XPAR_INTC_0_UARTLITE_2_VEC_ID
+#define UARLITE_BASE_ADDR_ULTRA       XPAR_UARTLITE_2_BASEADDR
+
 #define UART_BUFF_SIZE          1024 // kilobyte of data
 #define SEND_BUFF_SIZE          5 // bytes of data
 #define CHARACTER_MASK          48
 
 // UART instance
-XUartLite   UART_Inst; // UART instance
+XUartLite   UART_Inst_Pi; // UART instance for the Raspberry Pi connection 
+XUartLite   UART_Inst_Ultra; //UART instance for the ultrasonic sensor
 
 // Global variable setup
-uint8_t uart_rx_buffer[UART_BUFF_SIZE];
-bool uart_rx;
-uint32_t uart_rx_buff_len;
+uint8_t uart_rx_pi_buffer[UART_BUFF_SIZE];
+bool uart_rx_pi;
+uint32_t uart_rx_pi_buff_len;
 
-uint8_t uart_tx_buffer[SEND_BUFF_SIZE];
-bool uart_tx;
-uint32_t uart_tx_buff_len;
-bool uart_tx_processing;
+uint8_t uart_rx_ultra_buffer[UART_BUFF_SIZE];
+bool uart_rx_ultra;
+uint32_t uart_rx_ultra_buff_len;
+
+uint8_t uart_tx_pi_buffer[SEND_BUFF_SIZE];
+bool uart_tx_pi;
+uint32_t uart_tx_pi_buff_len;
+bool uart_tx_pi_processing;
+
+uint8_t uart_tx_ultra_buffer[SEND_BUFF_SIZE];
+bool uart_tx_ultra;
+uint32_t uart_tx_ultra_buff_len;
+bool uart_tx_ultra_processing;
+
 volatile uint32_t TotalSentCount; 
 
 void init_buffers(void);
 
 /**
- * @brief IRQ handler for the UART rx pin
+ * @brief IRQ handler for the UART rx pin coming in from Raspberry pi
 */
-void uart_rx_irq(void *CallBackRef);
+void uart_rx_pi_irq(void *CallBackRef);
+
+/**
+ * @brief IRQ handler for the UART rx pin coming in from ultrasonic
+*/
+void uart_rx_ultra_irq(void *CallBackRef);
 
 /**
  * @brief IRQ handler for the UART tx pin
  * 
  */
-void uart_tx_irq(void *CallBackRef, unsigned int EventData);
+void uart_tx_pi_irq(void *CallBackRef, unsigned int EventData);
 #endif  // UART_H

@@ -50,11 +50,11 @@ static void display_data(void);
 
 void idle_state(void)
 {
-    if(uart_rx)
+    if(uart_rx_pi)
     {
         // need to turn of uart interrupt to process the data
         // so we can operate without being blocked
-        XUartLite_DisableInterrupt(&UART_Inst);
+        XUartLite_DisableInterrupt(&UART_Inst_Pi);
         run_state_t = processing;
         if (1 == DEBUG)
         {
@@ -74,8 +74,8 @@ void processing_state(void)
     // this way we just handle the last command given.
     // uart_buff_len always points to the next slot so last
     // message is N-1
-    uint32_t last_message = uart_rx_buff_len - 1;
-    uart_msg = uart_rx_buffer[last_message];
+    uint32_t last_message = uart_rx_pi_buff_len - 1;
+    uart_msg = uart_rx_pi_buffer[last_message];
 
     if (1 == DEBUG)
     {
@@ -123,17 +123,18 @@ void run_state(void)
     run_motors(true);
     while(run_count <= motor_run_time)
     {
-        if(!XUartLite_IsSending(&UART_Inst))
+        if(!XUartLite_IsSending(&UART_Inst_Pi))
         {
-        	uart_tx_buffer[0] = (left_wheel) ? 0x2D : 0x2B;
-            uart_tx_buffer[1] = HB3_getRPM(HB3_LEFT_BA);
-            uart_tx_buffer[2] = (right_wheel) ? 0x2B : 0x2D;
-            uart_tx_buffer[3] = HB3_getRPM(HB3_RIGHT_BA);
-            uart_tx_buffer[4] = 0x0A; // \n
-            if((uart_tx_buffer[1] != 0) && (uart_tx_buffer[3] != 0))
+        	uart_tx_pi_buffer[0] = (left_wheel) ? 0x2D : 0x2B;
+            uart_tx_pi_buffer[1] = HB3_getRPM(HB3_LEFT_BA);
+            uart_tx_pi_buffer[2] = (right_wheel) ? 0x2B : 0x2D;
+            uart_tx_pi_buffer[3] = HB3_getRPM(HB3_RIGHT_BA);
+            uart_tx_pi_buffer[4] = 0x0A; // \n
+            if((uart_tx_pi_buffer[1] != 0) && (uart_tx_pi_buffer[3] != 0))
             {
-            	XUartLite_Send(&UART_Inst, &uart_tx_buffer[0], 5);
+            	XUartLite_Send(&UART_Inst_Pi, &uart_tx_pi_buffer[0], 5);
             }
+
         }
         display();
     } // wait here for the request time
@@ -153,13 +154,13 @@ void end_state(void)
         xil_printf("Cleaning up system\r\n");
     }
     // say we have processed data for next run
-    uart_rx = false;
+    uart_rx_pi = false;
     // reset buffer pointer
-    uart_rx_buff_len = 0;
+    uart_rx_pi_buff_len = 0;
     // clear any data that came in while we processed
-    XUartLite_ResetFifos(&UART_Inst);
+    XUartLite_ResetFifos(&UART_Inst_Pi);
     // re-enable the interrupt
-    XUartLite_EnableInterrupt(&UART_Inst);
+    XUartLite_EnableInterrupt(&UART_Inst_Pi);
     // return to beginning
     run_state_t = idle;
 }
