@@ -62,61 +62,43 @@ class MainControlsFragment : Fragment() {
                 mainControlsFragment = this@MainControlsFragment
             }
 
-        // Both motor detail gauges start off invisible
-        //binding?.speedView?.visibility = View.VISIBLE
-        //binding?.speedView2?.visibility = View.INVISIBLE
-
         // Set listeners for each button
         binding?.up?.setOnClickListener{
             sharedViewModel.updateMotor((0))
             packageDataAndSend()
-           // binding?.directionStatus?.text = "$directionMessage up"
+            binding?.directionStatus?.text = "$directionMessage up"
         }
         binding?.right?.setOnClickListener{
             sharedViewModel.updateMotor((1))
             packageDataAndSend()
-           // binding?.directionStatus?.text = "$directionMessage right"
+            binding?.directionStatus?.text = "$directionMessage right"
         }
         binding?.down?.setOnClickListener{
             sharedViewModel.updateMotor((2))
             packageDataAndSend()
-           // binding?.directionStatus?.text = "$directionMessage down"
+            binding?.directionStatus?.text = "$directionMessage down"
         }
         binding?.left?.setOnClickListener{
             sharedViewModel.updateMotor((3))
             packageDataAndSend()
-          //  binding?.directionStatus?.text = "$directionMessage left"
+            binding?.directionStatus?.text = "$directionMessage left"
         }
 
-        binding?.directionStatus?.text = "Speed: ${sharedViewModel.motor1_speed.value}"
-
-       /* binding?.motorToggle?.setOnClickListener{
-            if (!motor1){
-                binding?.speedView?.visibility = View.VISIBLE
-                binding?.speedView2?.visibility = View.INVISIBLE
-                motor1 = true
-            } else {
-                binding?.speedView?.visibility = View.INVISIBLE
-                binding?.speedView2?.visibility = View.VISIBLE
-                motor1 = false
-            }
-        }*/
+        sharedViewModel.motor1_speed.observe(viewLifecycleOwner){
+            newSpeed -> binding?.speedView?.speedTo(newSpeed)
+        }
+        sharedViewModel.motor2_speed.observe(viewLifecycleOwner){
+                newSpeed -> binding?.speedView?.speedTo(newSpeed)
+        }
 
         binding?.speedView?.apply{
             unit = " RPM"
             minSpeed = -50.0F
             maxSpeed = 50.0F
             withTremble = false
-            // TODO: Figure out why this is not updating!
-            // sharedViewModel.motor1_speed.value?.let { speedTo(it) }
             makeSections(2, Color.CYAN, Style.BUTT)
             sections[0].color = Color.LTGRAY
             sections[1].color = Color.GREEN
-        }
-
-        // TODO: It's also not updating here!
-        if (sharedViewModel.motor1_speed.value != null) {
-            binding?.speedView?.speedTo(sharedViewModel.motor1_speed.value!!)
         }
 
         binding?.speedView2?.apply{
@@ -124,17 +106,10 @@ class MainControlsFragment : Fragment() {
             minSpeed = -50.0F
             maxSpeed = 50.0F
             withTremble = false
-            sharedViewModel.motor1_speed.value?.let { speedTo(it) }
             makeSections(2, Color.CYAN, Style.BUTT)
             sections[0].color = Color.MAGENTA
             sections[1].color = Color.YELLOW
         }
-
-        if (sharedViewModel.motor1_speed.value != null){
-        binding?.speedView?.speedTo(sharedViewModel.motor1_speed.value!!)}
-
-        if (sharedViewModel.motor2_speed.value != null){
-            binding?.speedView2?.speedTo(sharedViewModel.motor2_speed.value!!)}
 
         binding?.videoFeedButton?.setOnClickListener{
             findNavController().navigate(R.id.action_mainControlsFragment_to_videoFeedFragment)

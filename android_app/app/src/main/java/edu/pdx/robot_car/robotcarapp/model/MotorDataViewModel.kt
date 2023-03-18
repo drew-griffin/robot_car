@@ -10,8 +10,6 @@ import org.json.JSONObject
 
 class MotorDataViewModel: ViewModel() {
 
-    // These are examples of variables we might use in the view model
-    // Basically any variable which we need to be global across fragments
     lateinit var mqttClient : MQTTClient
     lateinit var mqttClientID: String
 
@@ -23,7 +21,6 @@ class MotorDataViewModel: ViewModel() {
 
     private val _upCounter = MutableLiveData<Int>(5)
     val upCounter: LiveData<Int> = _upCounter
-
     private val _downCounter = MutableLiveData<Int>(5)
     val downCounter: LiveData<Int> = _downCounter
     private val _rightCounter = MutableLiveData<Int>(5)
@@ -127,20 +124,18 @@ class MotorDataViewModel: ViewModel() {
     fun parseMQTTMessage(message: MqttMessage?) {
 
         // temporary testing with just one value instead of JSON:
-        val leftRPM = message.toString().toFloat()
+        // TODO: Safe to delete after Noah tests JSON is working
+        /*val leftRPM = message.toString().toFloat()
         updateSpeed(leftRPM, 1)
-        Log.d("Motor Data View Model","Left Motor Speed: ${motor1_speed.value}")
+        Log.d("Motor Data View Model","Left Motor Speed: ${motor1_speed.value}")*/
 
-        /*
         val motorData = JSONObject(message.toString())
         val leftRPM = motorData.getString("Left_Motor").toInt().toFloat()
         val rightRPM = motorData.getString("Right_Motor").toInt().toFloat()
         updateSpeed(leftRPM, 1)
         updateSpeed(rightRPM, 2)
         Log.d("Motor Data View Model","Left Motor Speed: ${motor1_speed.value}")
-        Log.d("Motor Data View Model","_Left Motor Speed: ${_motor1_speed.value}")
         Log.d("Motor Data View Model","Right Motor Speed: ${motor2_speed.value}")
-        Log.d("Motor Data View Model","_Right Motor Speed: ${_motor2_speed.value}")*/
     }
 }
 

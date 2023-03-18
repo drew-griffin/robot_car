@@ -26,35 +26,37 @@
             android:id="@+id/videoFeedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="270dp"
             android:text="@string/live_video"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/speedView" />
+            app:layout_constraintTop_toBottomOf="@+id/directionStatus" />
 
         <ImageButton
             android:id="@+id/up"
             android:layout_width="78dp"
             android:layout_height="77dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="300dp"
             android:contentDescription="@string/up_arrow"
             android:scaleType="fitXY"
             android:src="@drawable/up_arrow"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/videoFeedButton" />
 
         <ImageButton
             android:id="@+id/down"
             android:layout_width="75dp"
             android:layout_height="75dp"
-            android:layout_marginTop="72dp"
+            android:layout_marginTop="100dp"
+            android:layout_marginBottom="100dp"
             android:contentDescription="@string/down_arrow"
             android:scaleType="fitXY"
             android:src="@drawable/down_arrow"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/up" />
@@ -93,8 +95,8 @@
             android:id="@+id/directionStatus"
             android:layout_width="342dp"
             android:layout_height="30dp"
-            android:layout_marginTop="250dp"
-            android:layout_marginBottom="300dp"
+            android:layout_marginTop="230dp"
+            android:layout_marginBottom="5dp"
             android:gravity="center"
             android:textAlignment="textStart"
             android:textSize="24sp"
@@ -103,13 +105,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="RtlCompat"
-            tools:text="@{viewModel.motor1_speed.toString()}" />
+            tools:text="Robot is currently going forward" />
 
         <com.github.anastr.speedviewlib.SpeedView
             android:id="@+id/speedView"
             android:layout_width="159dp"
             android:layout_height="164dp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="100dp"
+            android:layout_marginBottom="450dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -119,7 +123,9 @@
             android:id="@+id/speedView2"
             android:layout_width="160dp"
             android:layout_height="183dp"
-            android:layout_marginEnd="34dp"
+            android:layout_marginTop="100dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="450dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

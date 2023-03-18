@@ -83,7 +83,7 @@ class WelcomeFragment : Fragment() {
                             val successMsg = "MQTT Connection to $mqttNetwork Established"
                             Toast.makeText(context, successMsg, Toast.LENGTH_LONG).show()
                             findNavController().navigate(R.id.action_welcomeFragment_to_mainControlsFragment)
-                            // subscribe to motor status topics
+                            // subscribe to motor status topic
                             subscribeToStatus(ROBOT_CAR_STATUS)
                         }
 
@@ -101,15 +101,9 @@ class WelcomeFragment : Fragment() {
                             val msg = "Received message: ${message.toString()} from topic: $topic"
                             Log.d(TAG, msg)
 
-                            // temporary just to get the shared data working
-                            //sharedViewModel.updateMotorSpeedString(message.toString())
-                            sharedViewModel.parseMQTTMessage(message)
-
-                            // since a message arrived I'm assuming that the topic string is not null
                             if (topic!! == ROBOT_CAR_STATUS){
+                                Log.d("Welcome Fragment","ROBOT_CAR_STATUS message arrived, sending it to be parsed.")
                                 sharedViewModel.parseMQTTMessage(message)
-                                // TODO: Parse the message since both motors might be sent in the same message
-                                //sharedViewModel.updateSpeed(message.toString().toFloat(), 1)
                             } else {
                                 Log.d(TAG, "Received invalid topic: $topic")
                             }
