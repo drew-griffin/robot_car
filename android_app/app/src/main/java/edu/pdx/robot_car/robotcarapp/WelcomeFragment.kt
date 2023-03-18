@@ -101,11 +101,14 @@ class WelcomeFragment : Fragment() {
                             val msg = "Received message: ${message.toString()} from topic: $topic"
                             Log.d(TAG, msg)
 
+                            // temporary just to get the shared data working
+                            //sharedViewModel.updateMotorSpeedString(message.toString())
+                            sharedViewModel.parseMQTTMessage(message)
+
                             // since a message arrived I'm assuming that the topic string is not null
                             if (topic!! == ROBOT_CAR_STATUS){
                                 sharedViewModel.parseMQTTMessage(message)
                                 // TODO: Parse the message since both motors might be sent in the same message
-                                // TODO: Or add sub-topics
                                 //sharedViewModel.updateSpeed(message.toString().toFloat(), 1)
                             } else {
                                 Log.d(TAG, "Received invalid topic: $topic")

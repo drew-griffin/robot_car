@@ -15,26 +15,14 @@ class MotorDataViewModel: ViewModel() {
     lateinit var mqttClient : MQTTClient
     lateinit var mqttClientID: String
 
-    private val _MQTT_username = MutableLiveData<String>()
-    val MQTT_username: LiveData<String> = _MQTT_username
-
     private val _motor1_speed = MutableLiveData<Float>()
     val motor1_speed: LiveData<Float> = _motor1_speed
 
     private val _motor2_speed = MutableLiveData<Float>()
     val motor2_speed: LiveData<Float> = _motor2_speed
 
-    private val _motor1_position = MutableLiveData<String>()
-    val motor1_position: LiveData<String> = _motor1_position
-
     private val _upCounter = MutableLiveData<Int>(5)
     val upCounter: LiveData<Int> = _upCounter
-
-    private val _upCounterString = MutableLiveData<String>()
-    val upCounterString: LiveData<String> = _upCounterString
-
-    private val _downCounterString = MutableLiveData<String>()
-    val downCounterString: LiveData<String> = _downCounterString
 
     private val _downCounter = MutableLiveData<Int>(5)
     val downCounter: LiveData<Int> = _downCounter
@@ -91,10 +79,6 @@ class MotorDataViewModel: ViewModel() {
         }
     }
 
-    fun updateDownCounter(MQTT_message: String){
-        _upCounterString.value = MQTT_message
-    }
-
     /**
      * @method publishMQTTMessage
      * @param topic of type String. The MQTT topic you wish to publish to
@@ -141,6 +125,13 @@ class MotorDataViewModel: ViewModel() {
      * todo: If we add other sensor data, it can be parsed here too
      */
     fun parseMQTTMessage(message: MqttMessage?) {
+
+        // temporary testing with just one value instead of JSON:
+        val leftRPM = message.toString().toFloat()
+        updateSpeed(leftRPM, 1)
+        Log.d("Motor Data View Model","Left Motor Speed: ${motor1_speed.value}")
+
+        /*
         val motorData = JSONObject(message.toString())
         val leftRPM = motorData.getString("Left_Motor").toInt().toFloat()
         val rightRPM = motorData.getString("Right_Motor").toInt().toFloat()
@@ -149,6 +140,7 @@ class MotorDataViewModel: ViewModel() {
         Log.d("Motor Data View Model","Left Motor Speed: ${motor1_speed.value}")
         Log.d("Motor Data View Model","_Left Motor Speed: ${_motor1_speed.value}")
         Log.d("Motor Data View Model","Right Motor Speed: ${motor2_speed.value}")
-        Log.d("Motor Data View Model","_Right Motor Speed: ${_motor2_speed.value}")
+        Log.d("Motor Data View Model","_Right Motor Speed: ${_motor2_speed.value}")*/
     }
 }
+

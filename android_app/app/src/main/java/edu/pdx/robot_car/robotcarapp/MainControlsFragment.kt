@@ -70,25 +70,25 @@ class MainControlsFragment : Fragment() {
         binding?.up?.setOnClickListener{
             sharedViewModel.updateMotor((0))
             packageDataAndSend()
-            binding?.directionStatus?.text = "$directionMessage up"
-            // For the up counter, I tried using the XML to directly print the value instead of adjusting it here.
-            //Log.d("MainControlsFragment","Up Counter: ${sharedViewModel.upCounter.value}")
+           // binding?.directionStatus?.text = "$directionMessage up"
         }
         binding?.right?.setOnClickListener{
             sharedViewModel.updateMotor((1))
             packageDataAndSend()
-            binding?.directionStatus?.text = "$directionMessage right"
+           // binding?.directionStatus?.text = "$directionMessage right"
         }
         binding?.down?.setOnClickListener{
             sharedViewModel.updateMotor((2))
             packageDataAndSend()
-            binding?.directionStatus?.text = "$directionMessage down"
+           // binding?.directionStatus?.text = "$directionMessage down"
         }
         binding?.left?.setOnClickListener{
             sharedViewModel.updateMotor((3))
             packageDataAndSend()
-            binding?.directionStatus?.text = "$directionMessage left"
+          //  binding?.directionStatus?.text = "$directionMessage left"
         }
+
+        binding?.directionStatus?.text = "Speed: ${sharedViewModel.motor1_speed.value}"
 
         binding?.motorToggle?.setOnClickListener{
             if (!motor1){
@@ -107,11 +107,16 @@ class MainControlsFragment : Fragment() {
             minSpeed = -50.0F
             maxSpeed = 50.0F
             withTremble = false
-            sharedViewModel.motor1_speed.value?.let { speedTo(it) }
-            makeSections(2, Color.CYAN, Style.ROUND)
+            // TODO: Figure out why this is not updating!
+            // sharedViewModel.motor1_speed.value?.let { speedTo(it) }
+            makeSections(2, Color.CYAN, Style.BUTT)
             sections[0].color = Color.LTGRAY
             sections[1].color = Color.GREEN
         }
+
+        // TODO: It's also not updating here!
+        if (sharedViewModel.motor1_speed.value != null)
+        binding?.speedView?.speedTo(sharedViewModel.motor1_speed.value!!)
 
         binding?.speedView2?.apply{
             unit = " RPM"
@@ -123,6 +128,12 @@ class MainControlsFragment : Fragment() {
             sections[0].color = Color.MAGENTA
             sections[1].color = Color.YELLOW
         }
+
+        if (sharedViewModel.motor1_speed.value != null){
+        binding?.speedView?.speedTo(sharedViewModel.motor1_speed.value!!)}
+
+        if (sharedViewModel.motor2_speed.value != null){
+            binding?.speedView2?.speedTo(sharedViewModel.motor2_speed.value!!)}
 
         binding?.videoFeedButton?.setOnClickListener{
             findNavController().navigate(R.id.action_mainControlsFragment_to_videoFeedFragment)

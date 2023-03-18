@@ -103,7 +103,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="RtlCompat"
-            tools:text="Robot is currently going forward" />
+            tools:text="@{viewModel.motor1_speed.toString()}" />
 
         <ToggleButton
             android:id="@+id/motorToggle"
