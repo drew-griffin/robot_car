@@ -32,6 +32,7 @@ extern uint8_t run_count;
 
 /**************** Macros ****************/
 #define GET_DIR         0x01
+#define LED_RUN         0xFFFF
 
 /**************** Local Global State ****************/
 /**
@@ -118,6 +119,7 @@ void run_state(void)
     }
     running_motors = true;
 
+    NX4IO_setLEDs(LED_RUN);
     run_motors(true);
     while(run_count <= motor_run_time)
     {
@@ -137,6 +139,7 @@ void run_state(void)
     } // wait here for the request time
     running_motors = false;
     run_count = 0;
+    NX4IO_setLEDs(~LED_RUN);
     run_motors(false);
     usleep(10 * 1000);
 
