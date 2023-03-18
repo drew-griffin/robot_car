@@ -19,17 +19,9 @@
         android:label="fragment_main_controls"
         tools:layout="@layout/fragment_main_controls" >
         <action
-            android:id="@+id/action_mainControlsFragment_to_motorStatusFragment"
-            app:destination="@id/motorStatusFragment" />
-        <action
             android:id="@+id/action_mainControlsFragment_to_videoFeedFragment"
             app:destination="@id/videoFeedFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/motorStatusFragment"
-        android:name="edu.pdx.robot_car.robotcarapp.MotorStatusFragment"
-        android:label="fragment_motor_status"
-        tools:layout="@layout/fragment_motor_status" />
     <fragment
         android:id="@+id/videoFeedFragment"
         android:name="edu.pdx.robot_car.robotcarapp.VideoFeedFragment"

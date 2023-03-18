@@ -1,10 +1,11 @@
 package edu.pdx.robot_car.robotcarapp.model
 
+import android.content.ContentValues
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import edu.pdx.robot_car.robotcarapp.MQTTClient
+import edu.pdx.robot_car.robotcarapp.*
 import org.eclipse.paho.client.mqttv3.*
 import org.json.JSONObject
 
@@ -12,6 +13,21 @@ class MotorDataViewModel: ViewModel() {
 
     lateinit var mqttClient : MQTTClient
     lateinit var mqttClientID: String
+
+    private val _mqttNetwork = MutableLiveData<String>(MQTT_SERVER_URI)
+    val mqttNetwork: LiveData<String> = _mqttNetwork
+
+    private val _mqttKey = MutableLiveData<String>(MQTT_CLIENT_ID)
+    val mqttKey: LiveData<String> = _mqttKey
+
+    private val _mqttUsername = MutableLiveData<String>(MQTT_USERNAME)
+    val mqttUsername: LiveData<String> = _mqttUsername
+
+    private val _mqttPassword = MutableLiveData<String>(MQTT_PWD)
+    val mqttPassword: LiveData<String> = _mqttPassword
+
+    private val _mqttConnected = MutableLiveData<Boolean>()
+    val mqttConnected: LiveData<Boolean> = _mqttConnected
 
     private val _motor1_speed = MutableLiveData<Float>()
     val motor1_speed: LiveData<Float> = _motor1_speed
@@ -28,8 +44,6 @@ class MotorDataViewModel: ViewModel() {
     private val _leftCounter = MutableLiveData<Int>(5)
     val leftCounter: LiveData<Int> = _leftCounter
 
-    // This is an example of a method the ViewModel can do
-    // Basically any interaction with or manipulation of the data that doesn't have to do with the UI
     fun updateSpeed(RPM: Float, motorNumber: Int) {
         when (motorNumber) {
             1 -> _motor1_speed.value = RPM
@@ -37,6 +51,18 @@ class MotorDataViewModel: ViewModel() {
         }
     }
 
+    fun updateMqttNetwork(newNetwork: String) {
+        _mqttNetwork.value = newNetwork
+    }
+    fun updateMqttKey(newKey: String) {
+        _mqttKey.value = newKey
+    }
+    fun updateMqttUsername(newUsername: String) {
+        _mqttUsername.value = newUsername
+    }
+    fun updateMqttPassword(newPassword: String) {
+        _mqttPassword.value = newPassword
+    }
     /*
     * @updateMotor
     * @param position
@@ -136,6 +162,74 @@ class MotorDataViewModel: ViewModel() {
         updateSpeed(rightRPM, 2)
         Log.d("Motor Data View Model","Left Motor Speed: ${motor1_speed.value}")
         Log.d("Motor Data View Model","Right Motor Speed: ${motor2_speed.value}")
+    }
+
+    fun connectToMQTT() {
+        mqttClient.connect(
+            mqttUsername.value.toString(),
+            mqttPassword.value.toString(),
+            object : IMqttActionListener {
+                override fun onSuccess(asyncActionToken: IMqttToken?) {
+                    Log.d(ContentValues.TAG, "Connection success")
+                    _mqttConnected.value = true
+                    // subscribe to motor status topic
+                    subscribeToStatus(ROBOT_CAR_STATUS)
+                }
+
+                override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
+                    Log.d(ContentValues.TAG, "Connection failure: ${exception.toString()}")
+                    _mqttConnected.value = false
+                    exception?.printStackTrace()
+                }
+            },
+
+            object : MqttCallback {
+                override fun messageArrived(topic: String?, message: MqttMessage?) {
+                    val msg = "Received message: ${message.toString()} from topic: $topic"
+                    Log.d(ContentValues.TAG, msg)
+
+                    if (topic!! == ROBOT_CAR_STATUS){
+                        Log.d("Welcome Fragment","ROBOT_CAR_STATUS message arrived, sending it to be parsed.")
+                        parseMQTTMessage(message)
+                    } else {
+                        Log.d(ContentValues.TAG, "Received invalid topic: $topic")
+                    }
+                }
+
+                override fun connectionLost(cause: Throwable?) {
+                    Log.d(ContentValues.TAG, "Connection lost ${cause.toString()}")
+                }
+
+                override fun deliveryComplete(token: IMqttDeliveryToken?) {
+                    Log.d(ContentValues.TAG, "Delivery complete")
+                }
+            })
+    }
+
+    private fun subscribeToStatus(subscribeTopic: String) {
+        // subscribe to status topic only if connected to broker
+        if (mqttClient.isConnected()) {
+            mqttClient.subscribe(
+                topic = subscribeTopic,
+                qos = 1,
+                object : IMqttActionListener {
+                    override fun onSuccess(asyncActionToken: IMqttToken?) {
+                        val msg = "Subscribed to: $subscribeTopic"
+                        Log.d(ContentValues.TAG, msg)
+                    }
+
+                    override fun onFailure(
+                        asyncActionToken: IMqttToken?,
+                        exception: Throwable?
+                    ) {
+                        Log.d(
+                            ContentValues.TAG, "Failed to subscribe: $subscribeTopic exception: ${exception.toString()}"
+                        )
+                    }
+                })
+        } else {
+            Log.d(ContentValues.TAG, "Cannot subscribe to $subscribeTopic: Not connected to server")
+        }
     }
 }
 

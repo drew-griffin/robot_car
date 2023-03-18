@@ -15,12 +15,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.github.anastr.speedviewlib.components.Style
 import edu.pdx.robot_car.robotcarapp.databinding.FragmentMainControlsBinding
 import edu.pdx.robot_car.robotcarapp.model.MotorDataViewModel
+import org.eclipse.paho.client.mqttv3.MqttClient
 import org.json.JSONObject
 import java.util.*
 
@@ -29,7 +31,6 @@ import java.util.*
  * @data     03/10/2023
  * @brief    This fragment will contain four buttons to control movement of the robot.
  *              (Stretch) It might contain speed level buttons too.
- *              (Stretch) The user can click a button to go to a Motor Status Detail fragment
  *              (Stretch) The user can click a button to go to a live video feed.
  * @priority MEDIUM (necessary)
  */
@@ -39,8 +40,6 @@ class MainControlsFragment : Fragment() {
     private var binding: FragmentMainControlsBinding? = null
     private val sharedViewModel: MotorDataViewModel by activityViewModels()
     private val directionMessage = "Current motor direction is"
-
-    private var motor1 = true       // which motor's info to display
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -132,6 +131,22 @@ class MainControlsFragment : Fragment() {
         val message = messageJSON.toString()
         sharedViewModel.publishMQTTMessage(ROBOT_CAR_CONTROL, message)
     }
+
+    override fun onResume(){
+        super.onResume()
+        sharedViewModel.mqttConnected.observe(viewLifecycleOwner) {
+            if (sharedViewModel.mqttConnected.value == true) {
+                val successMsg = "Still connected to MQTT Network"
+                Toast.makeText(context, successMsg, Toast.LENGTH_LONG).show()
+            } else {
+                val failureMsg = "MQTT Connection was lost. Reconnecting now."
+                Toast.makeText(context, failureMsg, Toast.LENGTH_LONG).show()
+                // Connect to MQTT using the data view model
+                sharedViewModel.connectToMQTT()
+            }
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         Log.d("Main Controls Fragment: ","Fragment Destroyed")

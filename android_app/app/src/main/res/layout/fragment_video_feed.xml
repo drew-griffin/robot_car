@@ -21,69 +21,73 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Video Fragment"
-        android:textSize="30dp"/>
+        <ImageButton
+            android:id="@+id/up"
+            android:layout_width="78dp"
+            android:layout_height="77dp"
+            android:layout_marginTop="400dp"
+            android:contentDescription="@string/up_arrow"
+            android:scaleType="fitXY"
+            android:src="@drawable/up_arrow"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
-        android:id="@+id/up"
-        android:layout_width="78dp"
-        android:layout_height="77dp"
-        android:layout_marginTop="300dp"
-        android:layout_marginBottom="300dp"
-        android:contentDescription="@string/up_arrow"
-        android:scaleType="fitXY"
-        android:src="@drawable/up_arrow"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ImageButton
+            android:id="@+id/down"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginTop="100dp"
+            android:layout_marginBottom="100dp"
+            android:contentDescription="@string/down_arrow"
+            android:scaleType="fitXY"
+            android:src="@drawable/down_arrow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/up" />
 
-    <ImageButton
-        android:id="@+id/down"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginBottom="100dp"
-        android:contentDescription="@string/down_arrow"
-        android:scaleType="fitXY"
-        android:src="@drawable/down_arrow"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/up" />
+        <ImageButton
+            android:id="@+id/right"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="93dp"
+            android:layout_marginBottom="1dp"
+            android:contentDescription="@string/right_arrow"
+            android:scaleType="fitXY"
+            android:src="@drawable/right_arrow"
+            app:layout_constraintBottom_toTopOf="@+id/down"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/down"
+            app:layout_constraintTop_toBottomOf="@+id/up" />
 
-    <ImageButton
-        android:id="@+id/right"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:layout_marginTop="1dp"
-        android:layout_marginEnd="93dp"
-        android:layout_marginBottom="1dp"
-        android:contentDescription="@string/right_arrow"
-        android:scaleType="fitXY"
-        android:src="@drawable/right_arrow"
-        app:layout_constraintBottom_toTopOf="@+id/down"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/down"
-        app:layout_constraintTop_toBottomOf="@+id/up" />
+        <ImageButton
+            android:id="@+id/left"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginStart="93dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:contentDescription="@string/left_arrow"
+            android:scaleType="fitXY"
+            android:src="@drawable/left_arrow"
+            app:layout_constraintBottom_toTopOf="@+id/down"
+            app:layout_constraintEnd_toStartOf="@+id/down"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/up" />
 
-    <ImageButton
-        android:id="@+id/left"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:layout_marginStart="93dp"
-        android:layout_marginTop="1dp"
-        android:layout_marginBottom="1dp"
-        android:contentDescription="@string/left_arrow"
-        android:scaleType="fitXY"
-        android:src="@drawable/left_arrow"
-        app:layout_constraintBottom_toTopOf="@+id/down"
-        app:layout_constraintEnd_toStartOf="@+id/down"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/up" />
+        <VideoView
+            android:id="@+id/videoView"
+            android:layout_width="285dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toTopOf="@id/up"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

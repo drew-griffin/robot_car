@@ -64,60 +64,32 @@ class WelcomeFragment : Fragment() {
         binding?.apply {
             // Set up the button click listeners
             // TODO: Add key and custom username/password to the connect function
-            // TODO: Export some of the MQTT functionality to the ViewModel since it is data-related, not UI-related
             connectButton.setOnClickListener {
-                val mqttNetwork: String =  if (binding?.MQTTNetwork?.text.toString() != "") binding?.MQTTNetwork?.text.toString() else MQTT_SERVER_URI
-                val mqttKey: String =      if (binding?.MQTTKey?.text.toString() != "") binding?.MQTTKey?.text.toString() else MQTT_CLIENT_ID
-                val mqttUsername: String = if (binding?.MQTTUsername?.text.toString() != "") binding?.MQTTUsername?.text.toString() else MQTT_USERNAME
-                val mqttPassword: String = if (binding?.MQTTPassword?.text.toString() != "") binding?.MQTTPassword?.text.toString() else MQTT_PWD
-                // open mQTT Broker communication
+                if (binding?.MQTTNetwork?.text.toString() != "")
+                    sharedViewModel.updateMqttNetwork(binding?.MQTTNetwork?.text.toString())
+                if (binding?.MQTTKey?.text.toString() != "")
+                    sharedViewModel.updateMqttKey(binding?.MQTTKey?.text.toString())
+                if (binding?.MQTTUsername?.text.toString() != "")
+                    sharedViewModel.updateMqttUsername(binding?.MQTTUsername?.text.toString())
+                if (binding?.MQTTPassword?.text.toString() != "")
+                    sharedViewModel.updateMqttPassword(binding?.MQTTPassword?.text.toString())
+
+                // Connect to MQTT using the data view model
                 sharedViewModel.mqttClientID = MqttClient.generateClientId()
-                sharedViewModel.mqttClient = MQTTClient(context, mqttNetwork, sharedViewModel.mqttClientID)
+                sharedViewModel.mqttClient = MQTTClient(context, sharedViewModel.mqttNetwork.value!!, sharedViewModel.mqttClientID)
+                sharedViewModel.connectToMQTT()
 
-                sharedViewModel.mqttClient.connect(
-                    mqttUsername,
-                    mqttPassword,
-                    object : IMqttActionListener {
-                        override fun onSuccess(asyncActionToken: IMqttToken?) {
-                            Log.d(TAG, "Connection success")
-                            val successMsg = "MQTT Connection to $mqttNetwork Established"
-                            Toast.makeText(context, successMsg, Toast.LENGTH_LONG).show()
-                            findNavController().navigate(R.id.action_welcomeFragment_to_mainControlsFragment)
-                            // subscribe to motor status topic
-                            subscribeToStatus(ROBOT_CAR_STATUS)
-                        }
-
-                        override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
-                            Log.d(TAG, "Connection failure: ${exception.toString()}")
-                            val failureMsg =
-                                "MQTT Connection to $mqttNetwork failed: ${exception?.toString()}"
-                            Toast.makeText(context, failureMsg, Toast.LENGTH_LONG).show()
-                            exception?.printStackTrace()
-                        }
-                    },
-
-                    object : MqttCallback {
-                        override fun messageArrived(topic: String?, message: MqttMessage?) {
-                            val msg = "Received message: ${message.toString()} from topic: $topic"
-                            Log.d(TAG, msg)
-
-                            if (topic!! == ROBOT_CAR_STATUS){
-                                Log.d("Welcome Fragment","ROBOT_CAR_STATUS message arrived, sending it to be parsed.")
-                                sharedViewModel.parseMQTTMessage(message)
-                            } else {
-                                Log.d(TAG, "Received invalid topic: $topic")
-                            }
-                        }
-
-                        override fun connectionLost(cause: Throwable?) {
-                            Log.d(TAG, "Connection lost ${cause.toString()}")
-                        }
-
-                        override fun deliveryComplete(token: IMqttDeliveryToken?) {
-                            Log.d(TAG, "Delivery complete")
-                        }
-                    })
-                //findNavController().navigate(R.id.action_welcomeFragment_to_mainControlsFragment)
+                // Check if the connection worked
+                sharedViewModel.mqttConnected.observe(viewLifecycleOwner) {
+                    if (sharedViewModel.mqttConnected.value == true) {
+                        val successMsg = "MQTT Connection to ${sharedViewModel.mqttNetwork.value} Established"
+                        Toast.makeText(context, successMsg, Toast.LENGTH_LONG).show()
+                        findNavController().navigate(R.id.action_welcomeFragment_to_mainControlsFragment)
+                    } else {
+                        val failureMsg = "MQTT Connection to ${sharedViewModel.mqttNetwork.value} failed."
+                        Toast.makeText(context, failureMsg, Toast.LENGTH_LONG).show()
+                    }
+                }
             }
         }
     }
@@ -139,37 +111,9 @@ class WelcomeFragment : Fragment() {
         return result
     }
 
-    private fun subscribeToStatus(subscribeTopic: String) {
-        // subscribe to status topic only if connected to broker
-        if (sharedViewModel.mqttClient.isConnected()) {
-            sharedViewModel.mqttClient.subscribe(
-                topic = subscribeTopic,
-                qos = 1,
-                object : IMqttActionListener {
-                    override fun onSuccess(asyncActionToken: IMqttToken?) {
-                        val msg = "Subscribed to: $subscribeTopic"
-                        Log.d(TAG, msg)
-                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-                    }
-
-                    override fun onFailure(
-                        asyncActionToken: IMqttToken?,
-                        exception: Throwable?
-                    ) {
-                        Log.d(
-                            TAG, "Failed to subscribe: $subscribeTopic exception: ${exception.toString()}"
-                        )
-                    }
-                })
-        } else {
-            Log.d(TAG, "Cannot subscribe to $subscribeTopic: Not connected to server")
-        }
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         Log.d("Welcome Fragment: ","Fragment Destroyed")
         binding = null
     }
-
 }
