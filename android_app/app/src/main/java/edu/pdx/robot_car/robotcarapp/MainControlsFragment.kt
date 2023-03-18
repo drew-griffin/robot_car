@@ -63,8 +63,8 @@ class MainControlsFragment : Fragment() {
             }
 
         // Both motor detail gauges start off invisible
-        binding?.speedView?.visibility = View.VISIBLE
-        binding?.speedView2?.visibility = View.INVISIBLE
+        //binding?.speedView?.visibility = View.VISIBLE
+        //binding?.speedView2?.visibility = View.INVISIBLE
 
         // Set listeners for each button
         binding?.up?.setOnClickListener{
@@ -90,7 +90,7 @@ class MainControlsFragment : Fragment() {
 
         binding?.directionStatus?.text = "Speed: ${sharedViewModel.motor1_speed.value}"
 
-        binding?.motorToggle?.setOnClickListener{
+       /* binding?.motorToggle?.setOnClickListener{
             if (!motor1){
                 binding?.speedView?.visibility = View.VISIBLE
                 binding?.speedView2?.visibility = View.INVISIBLE
@@ -100,7 +100,7 @@ class MainControlsFragment : Fragment() {
                 binding?.speedView2?.visibility = View.VISIBLE
                 motor1 = false
             }
-        }
+        }*/
 
         binding?.speedView?.apply{
             unit = " RPM"
@@ -115,8 +115,9 @@ class MainControlsFragment : Fragment() {
         }
 
         // TODO: It's also not updating here!
-        if (sharedViewModel.motor1_speed.value != null)
-        binding?.speedView?.speedTo(sharedViewModel.motor1_speed.value!!)
+        if (sharedViewModel.motor1_speed.value != null) {
+            binding?.speedView?.speedTo(sharedViewModel.motor1_speed.value!!)
+        }
 
         binding?.speedView2?.apply{
             unit = " RPM"

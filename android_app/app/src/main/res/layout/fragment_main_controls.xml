@@ -94,54 +94,36 @@
             android:layout_width="342dp"
             android:layout_height="30dp"
             android:layout_marginTop="250dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="300dp"
             android:gravity="center"
             android:textAlignment="textStart"
             android:textSize="24sp"
-            app:layout_constraintBottom_toTopOf="@+id/motorToggle"
+            app:layout_constraintBottom_toTopOf="@+id/videoFeedButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="RtlCompat"
             tools:text="@{viewModel.motor1_speed.toString()}" />
 
-        <ToggleButton
-            android:id="@+id/motorToggle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:text="@string/motor_1"
-            android:textOff="Left Motor Details. (Click to see Right Motor)"
-            android:textOn="Right Motor Details. (Click to see Left Motor)"
-            app:layout_constraintBottom_toTopOf="@+id/speedView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.488"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/directionStatus"
-            app:layout_constraintVertical_bias="0.153" />
-
         <com.github.anastr.speedviewlib.SpeedView
             android:id="@+id/speedView"
-            android:layout_width="199dp"
-            android:layout_height="199dp"
-            android:layout_marginTop="449dp"
-            android:layout_marginBottom="15dp"
-            app:layout_constraintBottom_toTopOf="@+id/videoFeedButton"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="159dp"
+            android:layout_height="164dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.625" />
 
         <com.github.anastr.speedviewlib.SpeedView
             android:id="@+id/speedView2"
-            android:layout_width="199dp"
-            android:layout_height="199dp"
-            android:layout_marginTop="449dp"
-            android:layout_marginBottom="15dp"
-            app:layout_constraintBottom_toTopOf="@+id/videoFeedButton"
+            android:layout_width="160dp"
+            android:layout_height="183dp"
+            android:layout_marginEnd="34dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.624" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
