@@ -31,7 +31,7 @@ extern task_t run_state_t; // used to end the state if motor is too near somethi
 
 void init_buffers(void)
 {
-     //initialize all tx ULTRA paramaters to false/0
+     //initialize all rx ULTRA paramaters to false/0
     UART.rx[PI] = false;
     UART.rx_buff_len[PI] = false;
     UART.rx[ULTRA] = false;
