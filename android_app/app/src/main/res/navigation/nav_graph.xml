@@ -26,5 +26,9 @@
         android:id="@+id/videoFeedFragment"
         android:name="edu.pdx.robot_car.robotcarapp.VideoFeedFragment"
         android:label="fragment_video_feed"
-        tools:layout="@layout/fragment_video_feed" />
+        tools:layout="@layout/fragment_video_feed" >
+        <action
+            android:id="@+id/action_videoFeedFragment_to_mainControlsFragment"
+            app:destination="@id/mainControlsFragment" />
+    </fragment>
 </navigation>

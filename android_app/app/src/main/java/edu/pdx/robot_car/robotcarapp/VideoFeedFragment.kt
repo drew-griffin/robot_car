@@ -67,6 +67,9 @@ class VideoFeedFragment : Fragment() {
             sharedViewModel.updateMotor((3))
             packageDataAndSend()
         }
+        binding?.motorModeButton?.setOnClickListener{
+            findNavController().navigate(R.id.action_videoFeedFragment_to_mainControlsFragment)
+        }
 
     }
     /**
@@ -89,7 +92,7 @@ class VideoFeedFragment : Fragment() {
         sharedViewModel.mqttConnected.observe(viewLifecycleOwner) {
             if (sharedViewModel.mqttConnected.value == true) {
                 val successMsg = "Still connected to MQTT Network"
-                Toast.makeText(context, successMsg, Toast.LENGTH_LONG).show()
+               // Toast.makeText(context, successMsg, Toast.LENGTH_SHORT).show()
             } else {
                 val failureMsg = "MQTT Connection was lost. Reconnecting now."
                 Toast.makeText(context, failureMsg, Toast.LENGTH_LONG).show()

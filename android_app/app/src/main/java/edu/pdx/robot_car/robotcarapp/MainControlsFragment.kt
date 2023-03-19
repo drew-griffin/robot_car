@@ -92,6 +92,8 @@ class MainControlsFragment : Fragment() {
 
         binding?.speedView?.apply{
             unit = " RPM"
+            unitTextColor = Color.WHITE
+            speedTextColor = Color.WHITE
             minSpeed = -50.0F
             maxSpeed = 50.0F
             withTremble = false
@@ -102,6 +104,8 @@ class MainControlsFragment : Fragment() {
 
         binding?.speedView2?.apply{
             unit = " RPM"
+            unitTextColor = Color.WHITE
+            speedTextColor = Color.WHITE
             minSpeed = -50.0F
             maxSpeed = 50.0F
             withTremble = false
@@ -137,7 +141,7 @@ class MainControlsFragment : Fragment() {
         sharedViewModel.mqttConnected.observe(viewLifecycleOwner) {
             if (sharedViewModel.mqttConnected.value == true) {
                 val successMsg = "Still connected to MQTT Network"
-                Toast.makeText(context, successMsg, Toast.LENGTH_LONG).show()
+                //Toast.makeText(context, successMsg, Toast.LENGTH_SHORT).show()
             } else {
                 val failureMsg = "MQTT Connection was lost. Reconnecting now."
                 Toast.makeText(context, failureMsg, Toast.LENGTH_LONG).show()

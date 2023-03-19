@@ -53,11 +53,11 @@ class WelcomeFragment : Fragment() {
         // exit if it is not
         if (!isConnected()) {
             Log.d(TAG, "Internet connection NOT available")
-            Toast.makeText(context, "Internet connection NOT available", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Internet connection NOT available", Toast.LENGTH_SHORT).show()
             activity?.finish()
         } else {
             Log.d(TAG, "Connected to the Internet")
-            Toast.makeText(context, "Connected to the Internet", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Connected to the Internet", Toast.LENGTH_SHORT).show()
         }
 
         // When they click the button, navigate to the next screen
@@ -83,7 +83,7 @@ class WelcomeFragment : Fragment() {
                 sharedViewModel.mqttConnected.observe(viewLifecycleOwner) {
                     if (sharedViewModel.mqttConnected.value == true) {
                         val successMsg = "MQTT Connection to ${sharedViewModel.mqttNetwork.value} Established"
-                        Toast.makeText(context, successMsg, Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, successMsg, Toast.LENGTH_SHORT).show()
                         findNavController().navigate(R.id.action_welcomeFragment_to_mainControlsFragment)
                     } else {
                         val failureMsg = "MQTT Connection to ${sharedViewModel.mqttNetwork.value} failed."
