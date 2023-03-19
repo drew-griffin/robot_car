@@ -1,8 +1,6 @@
 ////////////
-// Note - modified by Drew Seidel (dseidel@pdx.edu)
-// For ECE 544 Project 2  
-// Top-level module for ECE 544 Project #2
-// May have to be modified for your specific embedded system implementation
+// Note - modified by Noah Page (nopage@pdx.edu), Drew Seidel (dseidel@pdx.edu), and Stephen Weeks (stweeks@pdx.edu)
+// For ECE 544/558 Final Project Robot Car  
 ///////////
 `timescale 1 ps / 1 ps
 
