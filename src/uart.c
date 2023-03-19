@@ -33,9 +33,9 @@ void init_buffers(void)
 {
      //initialize all rx ULTRA paramaters to false/0
     UART.rx[PI] = false;
-    UART.rx_buff_len[PI] = false;
+    UART.rx_buff_len[PI] = 0;
     UART.rx[ULTRA] = false;
-    UART.rx_buff_len[ULTRA] = false;
+    UART.rx_buff_len[ULTRA] = 0;
 
     //set all rx buffers to 0
     for (int i = 0; i < NUM_UARTS; i++)
@@ -49,10 +49,10 @@ void init_buffers(void)
 
     //initialize all tx PI paramaters to false/0
     UART.tx[PI] = false; 
-    UART.tx_buff_len[PI] = false; 
+    UART.tx_buff_len[PI] = 0; 
     UART.tx_processing[PI] = false; 
     UART.tx[ULTRA] = false; 
-    UART.tx_buff_len[ULTRA] = false; 
+    UART.tx_buff_len[ULTRA] = 0; 
     UART.tx_processing[ULTRA] = false; 
 
     //set all tx buffers to 0
