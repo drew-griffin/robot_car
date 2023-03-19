@@ -87,7 +87,7 @@ class MainControlsFragment : Fragment() {
             newSpeed -> binding?.speedView?.speedTo(newSpeed)
         }
         sharedViewModel.motor2_speed.observe(viewLifecycleOwner){
-                newSpeed -> binding?.speedView?.speedTo(newSpeed)
+                newSpeed -> binding?.speedView2?.speedTo(newSpeed)
         }
 
         binding?.speedView?.apply{
