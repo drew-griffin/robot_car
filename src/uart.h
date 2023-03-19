@@ -23,6 +23,8 @@
 #include<stdio.h>
 #include "xparameters.h"
 #include "xuartlite.h"
+#include "task.h"
+#include "debug.h"
 #include <stdbool.h>
 
 /**************** Macros ****************/

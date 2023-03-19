@@ -1,12 +1,12 @@
 /**
  * @file task.c
- * 
+ *
  * @authors Stephen, Drew, Noah
  * @copyright Portland State University, 2023
- * 
+ *
  * @brief
  * This is the source file for implementing task functions
- * 
+ *
  * <pre>
  * MODIFICATION HISTORY:
  * ---------------------
@@ -14,7 +14,7 @@
  * -----------------------------------
  * 1.00a SW 11-Mar-2023 First release
  * </pre>
-************************************************************/
+ ************************************************************/
 
 #include <stdbool.h>
 #include "task.h"
@@ -26,23 +26,30 @@
 #include "myHB3IP.h"
 
 // shared global state
-extern task_t  run_state_t;
-bool    running_motors = false;
+extern task_t run_state_t;
+extern uint16_t millimeters; 
+bool running_motors = false;
 extern uint8_t run_count;
 
 /**************** Macros ****************/
-#define GET_DIR         0x01
-#define LED_RUN         0xFFFF
+#define GET_DIR 0x01
+#define LED_RUN 0xFFFF
 
 /**************** Local Global State ****************/
 /**
  * Mapping is [0] == forward : [1] == backwards
-*/
+ */
 //                               Forw   Back
 static bool left_direction[2] = {false, true};
 static bool right_direction[2] = {true, false};
 static uint8_t uart_msg;
-enum run_times {forward, right, left, back};
+enum run_times
+{
+    forward,
+    right,
+    left,
+    back
+};
 static bool left_wheel, right_wheel;
 
 /**************** Local Funcs ****************/
@@ -50,7 +57,7 @@ static void display_data(void);
 
 void idle_state(void)
 {
-    if(uart_rx_pi)
+    if (uart_rx_pi)
     {
         // need to turn of uart interrupt to process the data
         // so we can operate without being blocked
@@ -60,7 +67,6 @@ void idle_state(void)
         {
             xil_printf("switching from idle_state to processing state\r\n");
         }
-        
     }
     else
     {
@@ -82,7 +88,7 @@ void processing_state(void)
         xil_printf("packet message was %d\r\n", uart_msg);
     }
 
-     // 8-bit packet with bit0 == right direction and bit1 == left direction
+    // 8-bit packet with bit0 == right direction and bit1 == left direction
     right_wheel = right_direction[(uart_msg & GET_DIR)];
     left_wheel = left_direction[((uart_msg >> 1) & GET_DIR)];
     set_wheel_directions(left_wheel, right_wheel);
@@ -96,6 +102,9 @@ void run_state(void)
     {
     case forward:
         motor_run_time = 3;
+        uart_tx_ultra_buffer[0] = 0x55;
+        while(XUartLite_IsSending(&UART_Inst_Pi)){}; 
+        XUartLite_Send(&UART_Inst_Ultra, &uart_tx_ultra_buffer[0], 1);
         break;
     case right:
         motor_run_time = 1;
@@ -115,26 +124,36 @@ void run_state(void)
     if (1 == DEBUG)
     {
         xil_printf("running with direction code %d for amount of FIT ticks: %d\r\n",
-                    uart_msg, motor_run_time);
+                   uart_msg, motor_run_time);
     }
     running_motors = true;
 
     NX4IO_setLEDs(LED_RUN);
-    run_motors(true);
-    while(run_count <= motor_run_time)
+    if (1 == DEBUG)
     {
-        if(!XUartLite_IsSending(&UART_Inst_Pi))
+        xil_printf("Distance in mm is %d\n\r", millimeters);
+    }
+    // if we are closer than 50mm (~2 inches) and direction is forward HALT
+    if ((millimeters < 50) && (uart_msg & 0x03) == forward)
+    {
+        run_state_t = end;
+        return; 
+    }
+
+    while (run_count <= motor_run_time)
+    {
+        run_motors(true);
+        if (!XUartLite_IsSending(&UART_Inst_Pi))
         {
-        	uart_tx_pi_buffer[0] = (left_wheel) ? 0x2D : 0x2B;
+            uart_tx_pi_buffer[0] = (left_wheel) ? 0x2D : 0x2B;
             uart_tx_pi_buffer[1] = HB3_getRPM(HB3_LEFT_BA);
             uart_tx_pi_buffer[2] = (right_wheel) ? 0x2B : 0x2D;
             uart_tx_pi_buffer[3] = HB3_getRPM(HB3_RIGHT_BA);
             uart_tx_pi_buffer[4] = 0x0A; // \n
-            if((uart_tx_pi_buffer[1] != 0) && (uart_tx_pi_buffer[3] != 0))
+            if ((uart_tx_pi_buffer[1] != 0) && (uart_tx_pi_buffer[3] != 0))
             {
-            	XUartLite_Send(&UART_Inst_Pi, &uart_tx_pi_buffer[0], 5);
+                XUartLite_Send(&UART_Inst_Pi, &uart_tx_pi_buffer[0], 5);
             }
-
         }
         display();
     } // wait here for the request time
@@ -168,12 +187,12 @@ void end_state(void)
 /**************** Helper Functions *****************/
 static void display_data(void)
 {
-        NX4IO_SSEG_setDigit(SSEGHI, DIGIT7, CC_BLANK);
-	    NX4IO_SSEG_setDigit(SSEGHI, DIGIT6, CC_BLANK);
-	    NX4IO_SSEG_setDigit(SSEGHI, DIGIT5, CC_0);
-	    NX4IO_SSEG_setDigit(SSEGHI, DIGIT4, CC_0);
-	    NX4IO_SSEG_setDigit(SSEGLO, DIGIT3, CC_BLANK);
-	    NX4IO_SSEG_setDigit(SSEGLO, DIGIT2, CC_BLANK);
-	    NX4IO_SSEG_setDigit(SSEGLO, DIGIT1, CC_0);
-	    NX4IO_SSEG_setDigit(SSEGLO, DIGIT0, CC_0);
+    NX4IO_SSEG_setDigit(SSEGHI, DIGIT7, CC_BLANK);
+    NX4IO_SSEG_setDigit(SSEGHI, DIGIT6, CC_BLANK);
+    NX4IO_SSEG_setDigit(SSEGHI, DIGIT5, CC_0);
+    NX4IO_SSEG_setDigit(SSEGHI, DIGIT4, CC_0);
+    NX4IO_SSEG_setDigit(SSEGLO, DIGIT3, CC_BLANK);
+    NX4IO_SSEG_setDigit(SSEGLO, DIGIT2, CC_BLANK);
+    NX4IO_SSEG_setDigit(SSEGLO, DIGIT1, CC_0);
+    NX4IO_SSEG_setDigit(SSEGLO, DIGIT0, CC_0);
 }

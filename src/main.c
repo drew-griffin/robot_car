@@ -39,12 +39,6 @@ int main()
     while(1)
     {
         task_scheduler[run_state_t]();
-        if (DEBUG == 1)
-        {
-        	uart_tx_ultra_buffer[0] = 0x55;
-        	XUartLite_Send(&UART_Inst_Ultra, &uart_tx_ultra_buffer[0], 1);
-        	usleep(1000 * 1000);
-        }
     }
     
     microblaze_disable_interrupts();
