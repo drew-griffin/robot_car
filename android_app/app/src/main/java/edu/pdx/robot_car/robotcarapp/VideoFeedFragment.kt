@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -21,6 +22,7 @@ import edu.pdx.robot_car.robotcarapp.databinding.FragmentMainControlsBinding
 import edu.pdx.robot_car.robotcarapp.databinding.FragmentVideoFeedBinding
 import edu.pdx.robot_car.robotcarapp.databinding.FragmentWelcomeBinding
 import edu.pdx.robot_car.robotcarapp.model.MotorDataViewModel
+import org.json.JSONObject
 
 class VideoFeedFragment : Fragment() {
     private var binding: FragmentVideoFeedBinding? = null
@@ -45,7 +47,60 @@ class VideoFeedFragment : Fragment() {
             videoFeedFragment = this@VideoFeedFragment
         }
 
-        //binding?.videoView?.setVideoURI(Uri.parse("android.resource://"+context?.packageResourcePath+"/"+R.raw.movie))
-        //binding?.videoView?.start()
+        binding?.mjpegview?.setUrl("http://192.168.137.56:8081")
+        binding?.mjpegview?.startStream()
+
+        // Set listeners for each button
+        binding?.up?.setOnClickListener{
+            sharedViewModel.updateMotor((0))
+            packageDataAndSend()
+        }
+        binding?.right?.setOnClickListener{
+            sharedViewModel.updateMotor((1))
+            packageDataAndSend()
+        }
+        binding?.down?.setOnClickListener{
+            sharedViewModel.updateMotor((2))
+            packageDataAndSend()
+        }
+        binding?.left?.setOnClickListener{
+            sharedViewModel.updateMotor((3))
+            packageDataAndSend()
+        }
+
+    }
+    /**
+     * @function packageDataAndSend
+     * Takes in the state of the motor directs from latest motor update
+     * Packages the data, and uses publishMQQTMessage method in the MotorDataViewModel
+     * to send the message over MQTT
+     */
+    private fun packageDataAndSend(){
+        val messageJSON = JSONObject()
+        messageJSON.put("UP", sharedViewModel.upCounter.value)
+        messageJSON.put("DOWN", sharedViewModel.downCounter.value)
+        messageJSON.put("RIGHT", sharedViewModel.rightCounter.value)
+        messageJSON.put("LEFT", sharedViewModel.leftCounter.value)
+        val message = messageJSON.toString()
+        sharedViewModel.publishMQTTMessage(ROBOT_CAR_CONTROL, message)
+    }
+    override fun onResume(){
+        super.onResume()
+        sharedViewModel.mqttConnected.observe(viewLifecycleOwner) {
+            if (sharedViewModel.mqttConnected.value == true) {
+                val successMsg = "Still connected to MQTT Network"
+                Toast.makeText(context, successMsg, Toast.LENGTH_LONG).show()
+            } else {
+                val failureMsg = "MQTT Connection was lost. Reconnecting now."
+                Toast.makeText(context, failureMsg, Toast.LENGTH_LONG).show()
+                // Connect to MQTT using the data view model
+                sharedViewModel.connectToMQTT()
+            }
+        }
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d("Video Feed Fragment: ","Fragment Destroyed")
+        binding = null
     }
 }
