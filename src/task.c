@@ -128,7 +128,6 @@ void run_state(void)
     }
     running_motors = true;
 
-    NX4IO_setLEDs(LED_RUN);
     if (1 == DEBUG)
     {
         xil_printf("Distance in mm is %d\n\r", millimeters);
@@ -139,7 +138,8 @@ void run_state(void)
         run_state_t = end;
         return; 
     }
-
+    NX4IO_setLEDs(LED_RUN);
+    
     while (run_count <= motor_run_time)
     {
         run_motors(true);
