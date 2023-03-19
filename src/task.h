@@ -8,13 +8,12 @@
  * This is the header file handles the task
  * scheduler functions
  * 
- * <pre>
  * MODIFICATION HISTORY:
  * ---------------------
  * Ver  Who Date    Changes
  * -----------------------------------
- * 1.00a SW 11-Mar-2023 First release
- * </pre>
+ * 0.01  SW 11-Mar-2023 First release
+ * 1.00  TEAM 19-Mar-2023 Version 1 full functionality relase
 ************************************************************/
 
 #ifndef TASK_H

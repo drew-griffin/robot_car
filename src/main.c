@@ -1,6 +1,19 @@
-/*
- *	motor testing
- */
+/**
+ * @file main.c
+ *
+ * @authors Stephen, Drew, Noah
+ * @copyright Portland State University, 2023
+ *
+ * @brief This file implements the main infinite forever loop for the embedded system
+ *
+ * MODIFICATION HISTORY:
+ * ---------------------
+ * Ver  Who Date    Changes
+ * -----------------------------------
+ * 0.01  SW 23-Feb-2023 First release
+ * 1.00  TEAM 19-Mar-2023 Version 1 full functionality relase
+ ************************************************************/
+
 
 #include <stdlib.h>
 #include <stdio.h>

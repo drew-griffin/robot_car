@@ -6,14 +6,13 @@
  *
  * @brief
  * This is the source file for implementing task functions
- *
- * <pre>
+ * 
  * MODIFICATION HISTORY:
  * ---------------------
  * Ver  Who Date    Changes
  * -----------------------------------
- * 1.00a SW 11-Mar-2023 First release
- * </pre>
+ * 0.01  SW 11-Mar-2023 First release
+ * 1.00  TEAM 19-Mar-2023 Version 1 full functionality relase
  ************************************************************/
 
 #include <stdbool.h>
@@ -28,6 +27,7 @@
 // shared global state
 extern task_t run_state_t;
 extern uint16_t millimeters; 
+extern uart_t   UART; 
 bool running_motors = false;
 extern uint8_t run_count;
 
@@ -57,7 +57,7 @@ static void display_data(void);
 
 void idle_state(void)
 {
-    if (uart_rx_pi)
+    if (UART.rx[PI])
     {
         // need to turn of uart interrupt to process the data
         // so we can operate without being blocked
@@ -80,8 +80,8 @@ void processing_state(void)
     // this way we just handle the last command given.
     // uart_buff_len always points to the next slot so last
     // message is N-1
-    uint32_t last_message = uart_rx_pi_buff_len - 1;
-    uart_msg = uart_rx_pi_buffer[last_message];
+    uint32_t last_message = UART.rx_buff_len[PI] - 1;
+    uart_msg = UART.rx_buffer[PI][last_message];
 
     if (1 == DEBUG)
     {
@@ -102,9 +102,10 @@ void run_state(void)
     {
     case forward:
         motor_run_time = 3;
-        uart_tx_ultra_buffer[0] = 0x55;
+        //send the byte to receive mm to from the ultrasonic sensor 
+        UART.tx_buffer[ULTRA][0] = 0x55;
         while(XUartLite_IsSending(&UART_Inst_Ultra)){}; 
-        XUartLite_Send(&UART_Inst_Ultra, &uart_tx_ultra_buffer[0], 1);
+        XUartLite_Send(&UART_Inst_Ultra, &UART.tx_buffer[ULTRA][0], 1);
         break;
     case right:
         motor_run_time = 1;
@@ -145,14 +146,14 @@ void run_state(void)
         run_motors(true);
         if (!XUartLite_IsSending(&UART_Inst_Pi))
         {
-            uart_tx_pi_buffer[0] = (left_wheel) ? 0x2D : 0x2B;
-            uart_tx_pi_buffer[1] = HB3_getRPM(HB3_LEFT_BA);
-            uart_tx_pi_buffer[2] = (right_wheel) ? 0x2B : 0x2D;
-            uart_tx_pi_buffer[3] = HB3_getRPM(HB3_RIGHT_BA);
-            uart_tx_pi_buffer[4] = 0x0A; // \n
-            if ((uart_tx_pi_buffer[1] != 0) && (uart_tx_pi_buffer[3] != 0))
+            UART.tx_buffer[PI][0] = (left_wheel) ? 0x2D : 0x2B;
+            UART.tx_buffer[PI][1] = HB3_getRPM(HB3_LEFT_BA);
+            UART.tx_buffer[PI][2] = (right_wheel) ? 0x2B : 0x2D;
+            UART.tx_buffer[PI][3] = HB3_getRPM(HB3_RIGHT_BA);
+            UART.tx_buffer[PI][4] = 0x0A; // \n
+            if ((UART.tx_buffer[PI][1] != 0) && (UART.tx_buffer[PI][3] != 0))
             {
-                XUartLite_Send(&UART_Inst_Pi, &uart_tx_pi_buffer[0], 5);
+                XUartLite_Send(&UART_Inst_Pi, &UART.tx_buffer[PI][0], 5);
             }
         }
         display();
@@ -173,9 +174,9 @@ void end_state(void)
         xil_printf("Cleaning up system\r\n");
     }
     // say we have processed data for next run
-    uart_rx_pi = false;
+    UART.rx[PI] = false;
     // reset buffer pointer
-    uart_rx_pi_buff_len = 0;
+    UART.rx_buff_len[PI] = 0;
     // clear any data that came in while we processed
     XUartLite_ResetFifos(&UART_Inst_Pi);
     // re-enable the interrupt

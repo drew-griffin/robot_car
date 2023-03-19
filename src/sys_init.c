@@ -8,13 +8,12 @@
  * This is the source file for initialization of the system for the PID_Controller
  * software.
  * 
- * <pre>
  * MODIFICATION HISTORY:
  * ---------------------
  * Ver  Who Date    Changes
  * -----------------------------------
- * 1.00a SW 23-Feb-2023 First release
- * </pre>
+ * 0.01  SW 23-Feb-2023 First release
+ * 1.00  TEAM 19-Mar-2023 Version 1 full functionality relase
 ************************************************************/
 
 #include <stdint.h>
@@ -100,7 +99,7 @@ int system_init(void) {
 	}
 	//setup callback function for pi connection coming into FPGA 
 	status = XIntc_Connect(&INTC_Inst, UARTLITE_INTR_NUM_PI,
-						(XInterruptHandler)uart_rx_pi_irq,
+						(XInterruptHandler)rx_pi_irq,
 						(void *)&UART_Inst_Pi);
     if (status != XST_SUCCESS)
     {
@@ -109,7 +108,7 @@ int system_init(void) {
 
 	//setup callback function for ultrasonic connection coming into FPGA 
 	status = XIntc_Connect(&INTC_Inst, UARTLITE_INTR_NUM_ULTRA,
-						(XInterruptHandler)uart_rx_ultra_irq,
+						(XInterruptHandler)rx_ultra_irq,
 						(void *)&UART_Inst_Ultra);
     if (status != XST_SUCCESS)
     {
