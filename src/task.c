@@ -103,7 +103,7 @@ void run_state(void)
     case forward:
         motor_run_time = 3;
         uart_tx_ultra_buffer[0] = 0x55;
-        while(XUartLite_IsSending(&UART_Inst_Pi)){}; 
+        while(XUartLite_IsSending(&UART_Inst_Ultra)){}; 
         XUartLite_Send(&UART_Inst_Ultra, &uart_tx_ultra_buffer[0], 1);
         break;
     case right:
