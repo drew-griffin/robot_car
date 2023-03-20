@@ -13,7 +13,7 @@
  * Ver  Who Date    Changes
  * -----------------------------------
  * 0.01  SW 11-Mar-2023 First release
- * 1.00  TEAM 19-Mar-2023 Version 1 full functionality relase
+ * 1.00  TEAM 19-Mar-2023 Version 1 full functionality release
 ************************************************************/
 
 #ifndef TASK_H

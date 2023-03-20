@@ -12,7 +12,7 @@
  * Ver  Who Date    Changes
  * -----------------------------------
  * 0.01  SW 11-Mar-2023 First release
- * 1.00  TEAM 19-Mar-2023 Version 1 full functionality relase
+ * 1.00  TEAM 19-Mar-2023 Version 1 full functionality release
  ************************************************************/
 
 #include <stdbool.h>
@@ -98,6 +98,8 @@ void processing_state(void)
 void run_state(void)
 {
     uint8_t motor_run_time;
+    uint16_t sw = NX4IO_getSwitches();
+
     switch (uart_msg & 0x03)
     {
     case forward:
@@ -133,9 +135,8 @@ void run_state(void)
     {
         xil_printf("Distance in mm is %d\n\r", millimeters);
     }
-
     // if we are closer than 200mm (~8 inches) and direction is forward HALT
-    if ((millimeters < 200) && (uart_msg & 0x03) == forward)
+    if ((millimeters < 200) && (uart_msg & 0x03) == forward && ((sw & 0x1) == 0x1))
     {
         run_state_t = end;
         return; 
@@ -145,7 +146,7 @@ void run_state(void)
     
     while (run_count <= motor_run_time)
     {
-        run_motors(true);
+        run_motors(true, sw);
         if (!XUartLite_IsSending(&UART_Inst_Pi))
         {
             UART.tx_buffer[PI][0] = (left_wheel) ? 0x2D : 0x2B;
@@ -163,7 +164,7 @@ void run_state(void)
     running_motors = false;
     run_count = 0;
     NX4IO_setLEDs(~LED_RUN);
-    run_motors(false);
+    run_motors(false, 0);
     usleep(10 * 1000);
 
     run_state_t = end;
