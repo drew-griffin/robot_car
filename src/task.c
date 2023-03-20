@@ -133,12 +133,14 @@ void run_state(void)
     {
         xil_printf("Distance in mm is %d\n\r", millimeters);
     }
-    // if we are closer than 50mm (~2 inches) and direction is forward HALT
-    if ((millimeters < 50) && (uart_msg & 0x03) == forward)
+
+    // if we are closer than 200mm (~8 inches) and direction is forward HALT
+    if ((millimeters < 200) && (uart_msg & 0x03) == forward)
     {
         run_state_t = end;
         return; 
     }
+
     NX4IO_setLEDs(LED_RUN);
     
     while (run_count <= motor_run_time)
