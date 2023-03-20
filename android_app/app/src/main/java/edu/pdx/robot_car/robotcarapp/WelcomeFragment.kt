@@ -1,9 +1,9 @@
 /**
  * @fragment WelcomeFragment
- * @data     03/09/2023
- * @brief    This fragment will contain a welcome page for the user. The user may be able to change broker information and
- *           passwords here as well. A connect button will traverse the user to the MainControlsFragment
- * @priority HIGH (necessary)
+ * @date     03/09/2023
+ * @brief    This fragment contains a welcome page for the user.
+ *           The user can change MQTT broker information and passwords.
+ *           Connect button will connect to MQTT and navigate to MainControlsFragment
  */
 
 package edu.pdx.robot_car.robotcarapp

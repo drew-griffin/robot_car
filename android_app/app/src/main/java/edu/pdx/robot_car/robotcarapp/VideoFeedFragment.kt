@@ -1,8 +1,7 @@
 /**
  * @fragment VideoFeedFragment
- * @data     03/09/2023
- * @brief    This fragment will display a livestream of data being published by the RobotCar in video format.
- * @priority Low (Stretch goal)
+ * @date     03/09/2023
+ * @brief    This fragment displays a livestream of data being published by the RobotCar in video format.
  */
 
 package edu.pdx.robot_car.robotcarapp

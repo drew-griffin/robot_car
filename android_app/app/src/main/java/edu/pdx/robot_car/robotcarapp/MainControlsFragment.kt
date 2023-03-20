@@ -1,10 +1,9 @@
 /**
  * @fragment MainControlsFragment
- * @data     03/09/2023
- * @brief    This fragment allows the user to input basic controls to the robot car (forward, back, left, right).
- *           This fragment will take this data, and publish it to a singular MQTT topic in JSON format.
- *           The car can then subscribe to the corresponding topic, parse the message, and move accordingly
- * @priority HIGH (necessary)
+ * @date     03/10/2023
+ * @brief    This fragment contains four arrow buttons to control movement of the robot.
+ *           It contains two gauges showing the motor speeds.
+ *           The user can click a button to go to a live video feed.
  */
 package edu.pdx.robot_car.robotcarapp
 
@@ -26,20 +25,10 @@ import org.eclipse.paho.client.mqttv3.MqttClient
 import org.json.JSONObject
 import java.util.*
 
-/**
- * @fragment MainControlsFragment
- * @data     03/10/2023
- * @brief    This fragment will contain four buttons to control movement of the robot.
- *              (Stretch) It might contain speed level buttons too.
- *              (Stretch) The user can click a button to go to a live video feed.
- * @priority MEDIUM (necessary)
- */
-
 class MainControlsFragment : Fragment() {
 
     private var binding: FragmentMainControlsBinding? = null
     private val sharedViewModel: MotorDataViewModel by activityViewModels()
-    private val directionMessage = "Current motor direction is"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,22 +54,22 @@ class MainControlsFragment : Fragment() {
         binding?.up?.setOnClickListener{
             sharedViewModel.updateMotor((0))
             packageDataAndSend()
-            binding?.directionStatus?.text = "$directionMessage up"
+            binding?.directionStatus?.text = "The robot moved forward"
         }
         binding?.right?.setOnClickListener{
             sharedViewModel.updateMotor((1))
             packageDataAndSend()
-            binding?.directionStatus?.text = "$directionMessage right"
+            binding?.directionStatus?.text = "The robot turned right"
         }
         binding?.down?.setOnClickListener{
             sharedViewModel.updateMotor((2))
             packageDataAndSend()
-            binding?.directionStatus?.text = "$directionMessage down"
+            binding?.directionStatus?.text = "The robot moved backward"
         }
         binding?.left?.setOnClickListener{
             sharedViewModel.updateMotor((3))
             packageDataAndSend()
-            binding?.directionStatus?.text = "$directionMessage left"
+            binding?.directionStatus?.text = "The robot turned left"
         }
 
         sharedViewModel.motor1_speed.observe(viewLifecycleOwner){
