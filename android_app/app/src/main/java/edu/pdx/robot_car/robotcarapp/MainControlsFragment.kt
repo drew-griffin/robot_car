@@ -73,18 +73,18 @@ class MainControlsFragment : Fragment() {
         }
 
         sharedViewModel.motor1_speed.observe(viewLifecycleOwner){
-            newSpeed -> binding?.speedView?.speedTo(newSpeed)
+            newSpeed -> binding?.speedView?.setSpeedAt(newSpeed)
         }
         sharedViewModel.motor2_speed.observe(viewLifecycleOwner){
-                newSpeed -> binding?.speedView2?.speedTo(newSpeed)
+                newSpeed -> binding?.speedView2?.setSpeedAt(newSpeed)
         }
 
         binding?.speedView?.apply{
             unit = " RPM"
             unitTextColor = Color.WHITE
             speedTextColor = Color.WHITE
-            minSpeed = -50.0F
-            maxSpeed = 50.0F
+            minSpeed = -65.0F
+            maxSpeed = 65.0F
             withTremble = false
             makeSections(2, Color.CYAN, Style.BUTT)
             sections[0].color = Color.LTGRAY
@@ -95,8 +95,8 @@ class MainControlsFragment : Fragment() {
             unit = " RPM"
             unitTextColor = Color.WHITE
             speedTextColor = Color.WHITE
-            minSpeed = -50.0F
-            maxSpeed = 50.0F
+            minSpeed = -65.0F
+            maxSpeed = 65.0F
             withTremble = false
             makeSections(2, Color.CYAN, Style.BUTT)
             sections[0].color = Color.MAGENTA
