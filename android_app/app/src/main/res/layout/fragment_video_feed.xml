@@ -1,14 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".VideoFeedFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    tools:context=".VideoFeedFragment">
+    <data>
+        <variable
+            name="viewModel"
+            type="edu.pdx.robot_car.robotcarapp.model.MotorDataViewModel" />
+        <variable
+            name="videoFeedFragment"
+            type="edu.pdx.robot_car.robotcarapp.VideoFeedFragment" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:id="@+id/main_controls_constraint_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="We made it to the video status fragment!" />
+        android:orientation="vertical">
 
-</FrameLayout>
+        <ImageButton
+            android:id="@+id/up"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginTop="480dp"
+            android:contentDescription="@string/up_arrow"
+            android:scaleType="fitXY"
+            android:src="@drawable/up_arrow"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/left"
+            android:layout_width="0dp"
+            android:layout_height="75dp"
+            android:layout_marginStart="93dp"
+            android:layout_marginTop="558dp"
+            android:layout_marginEnd="75dp"
+            android:contentDescription="@string/left_arrow"
+            android:scaleType="fitXY"
+            android:src="@drawable/left_arrow"
+            app:layout_constraintEnd_toStartOf="@+id/right"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/right"
+            android:layout_width="0dp"
+            android:layout_height="75dp"
+            android:layout_marginTop="558dp"
+            android:layout_marginEnd="93dp"
+            android:contentDescription="@string/right_arrow"
+            android:scaleType="fitXY"
+            android:src="@drawable/right_arrow"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/left"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/down"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginTop="636dp"
+            android:contentDescription="@string/down_arrow"
+            android:scaleType="fitXY"
+            android:src="@drawable/down_arrow"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.longdo.mjpegviewer.MjpegView
+            android:id="@+id/mjpegview"
+            android:layout_width="0dp"
+            android:layout_height="410dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/motor_mode_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="418dp"
+            android:text="@string/motor_mode"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,8 +1,6 @@
 ////////////
-// Note - modified by Drew Seidel (dseidel@pdx.edu)
-// For ECE 544 Project 2  
-// Top-level module for ECE 544 Project #2
-// May have to be modified for your specific embedded system implementation
+// Note - modified by Noah Page (nopage@pdx.edu), Drew Seidel (dseidel@pdx.edu), and Stephen Weeks (stweeks@pdx.edu)
+// For ECE 544/558 Final Project Robot Car  
 ///////////
 `timescale 1 ps / 1 ps
 
@@ -26,13 +24,18 @@ module nexysa7fpga
     seg,
     sw,
     clk,
-    uart_rtl_rxd,
-    uart_rtl_txd,
-    // debug header/Motor
-    JA_0,
-    JA_1,
-    // encoder header
-    JC);
+    //UART connection to PI 
+    RX_PI,
+    TX_PI,
+    //UART connection to ultrasonic Y401 sensor
+    RX_Y401,
+    TX_Y401, 
+    // left motor header
+    JA_out,
+    JA_in,
+    // right motor header
+    JB_out,
+    JB_in);
     
   output RGB2_Blue;
   output RGB2_Green;
@@ -52,11 +55,14 @@ module nexysa7fpga
   output [6:0]seg;
   input [15:0]sw;
   input clk;
-  output [1:0] JA_0;
-  input  [1:0] JA_1;
-  input  [7:4] JC;
-  output uart_rtl_txd;
-  input  uart_rtl_rxd;
+  output [1:0] JA_out;
+  input  [1:0] JA_in;
+  output [1:0] JB_out;
+  input  [1:0] JB_in;
+  output TX_PI;
+  input  RX_PI;
+  output TX_Y401;
+  input  RX_Y401;
 
   wire RGB2_Blue;
   wire RGB2_Green;
@@ -77,44 +83,45 @@ module nexysa7fpga
   wire [6:0]seg;
   wire [15:0]sw;
   wire clk;
-  wire [3:0] JA;
-  wire [3:0] JB;
   wire [31:0] control_reg;
   wire [31:0] gpio_pwm;
   wire [31:0] gpio_dir;
   // motor specific variables
-  wire SA; 
-  wire SB; 
-  wire EN; 
-  wire DIR; 
-  //encoder specific variables
-  wire EcA;
-  wire EcB;
-  wire EcBTN;
-  wire EcSW;
-  // assign signals to the JA debug header and motor
-  assign JA_0[0] = DIR;
-  assign JA_0[1] = EN;
-  assign SA    = JA_1[0];
-  assign SB    = JA_1[1]; //not used, but connected to tachB on HB3 IP
-  // assign signals to the JC header for encoder
-  assign EcA   = JC[4]; // E7 
-  assign EcB   = JC[5]; // J3
-  assign EcBTN = JC[6]; // J4
-  assign EcSW  = JC[7]; // E6
+  wire LeftMotorDirection;
+  wire LeftMotorEnable;
+  wire LeftMotorEncoder_A;
+  wire LeftMotorEncoder_B;
+  wire RightMotorDirection;
+  wire RightMotorEnable;
+  wire RightMotorEncoder_A;
+  wire RightMotorEncoder_B;
 
-                  
+  // assign signals to the JA Left Motor
+  assign JA_out[0]          = LeftMotorDirection;
+  assign JA_out[1]          = LeftMotorEnable;
+  assign LeftMotorEncoder_A = JA_in[0];
+  assign LeftMotorEncoder_B = JA_in[1];
+    // assign signals to the JB Right Motor
+  assign JB_out[0]          = RightMotorDirection;
+  assign JB_out[1]          = RightMotorEnable;
+  assign RightMotorEncoder_A = JB_in[0];
+  assign RightMotorEncoder_B = JB_in[1];
+                 
   embsys embsys_i
-       (.DIR(DIR),
-        .EN(EN),
+       (.LeftMotorDirection(LeftMotorDirection),
+        .LeftMotorEnable(LeftMotorEnable),
+        .LeftMotorEncoder_A(LeftMotorEncoder_A),
+        .LeftMotorEncoder_B(LeftMotorEncoder_B),
         .RGB1_Blue_0(RGB1_Blue),
         .RGB1_Green_0(RGB1_Green),
         .RGB1_Red_0(RGB1_Red),
         .RGB2_Blue_0(RGB2_Blue),
         .RGB2_Green_0(RGB2_Green),
         .RGB2_Red_0(RGB2_Red),
-        .SA(SA),
-        .SB(SB),
+        .RightMotorDirection(RightMotorDirection),
+        .RightMotorEnable(RightMotorEnable),
+        .RightMotorEncoder_A(RightMotorEncoder_A),
+        .RightMotorEncoder_B(RightMotorEncoder_B),
         .an_0(an),
         .btnC_0(btnC),
         .btnD_0(btnD),
@@ -123,14 +130,12 @@ module nexysa7fpga
         .btnU_0(btnU),
         .clk_100MHz(clk),
         .dp_0(dp),
-        .encA_0(EcB), // switched A and B for clockwise increment
-        .encBTN_0(EcBTN),
-        .encB_0(EcA),
-        .encSWT_0(EcSW),
         .led_0(led),
         .resetn(btnCpuReset),
         .seg_0(seg),
         .sw_0(sw),
-        .uart_rtl_0_rxd(uart_rtl_rxd),
-        .uart_rtl_0_txd(uart_rtl_txd));
+        .uart_rtl_0_rxd(RX_PI),
+        .uart_rtl_0_txd(TX_PI),
+        .uart_rtl_1_rxd(RX_Y401),
+        .uart_rtl_1_txd(TX_Y401));
 endmodule

@@ -1,9 +1,9 @@
 /**
  * @fragment WelcomeFragment
- * @data     03/09/2023
- * @brief    This fragment will contain a welcome page for the user. The user may be able to change broker information and
- *           passwords here as well. A connect button will traverse the user to the MainControlsFragment
- * @priority HIGH (necessary)
+ * @date     03/09/2023
+ * @brief    This fragment contains a welcome page for the user.
+ *           The user can change MQTT broker information and passwords.
+ *           Connect button will connect to MQTT and navigate to MainControlsFragment
  */
 
 package edu.pdx.robot_car.robotcarapp
@@ -53,79 +53,43 @@ class WelcomeFragment : Fragment() {
         // exit if it is not
         if (!isConnected()) {
             Log.d(TAG, "Internet connection NOT available")
-            Toast.makeText(context, "Internet connection NOT available", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Internet connection NOT available", Toast.LENGTH_SHORT).show()
             activity?.finish()
         } else {
             Log.d(TAG, "Connected to the Internet")
-            Toast.makeText(context, "Connected to the Internet", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Connected to the Internet", Toast.LENGTH_SHORT).show()
         }
-
-        val mqttNetwork: String =  if (binding?.MQTTNetwork?.text.toString() != "") binding?.MQTTNetwork?.text.toString() else MQTT_SERVER_URI
-        val mqttKey: String =      if (binding?.MQTTKey?.text.toString() != "") binding?.MQTTKey?.text.toString() else MQTT_CLIENT_ID
-        val mqttUsername: String = if (binding?.MQTTUsername?.text.toString() != "") binding?.MQTTUsername?.text.toString() else MQTT_USERNAME
-        val mqttPassword: String = if (binding?.MQTTPassword?.text.toString() != "") binding?.MQTTPassword?.text.toString() else MQTT_PWD
-
-        // open mQTT Broker communication
-        sharedViewModel.mqttClientID = MqttClient.generateClientId()
-        sharedViewModel.mqttClient = MQTTClient(context, mqttNetwork, sharedViewModel.mqttClientID)
 
         // When they click the button, navigate to the next screen
         binding?.apply {
             // Set up the button click listeners
             // TODO: Add key and custom username/password to the connect function
-            // TODO: Export some of the MQTT functionality to the ViewModel since it is data-related, not UI-related
             connectButton.setOnClickListener {
+                if (binding?.MQTTNetwork?.text.toString() != "")
+                    sharedViewModel.updateMqttNetwork(binding?.MQTTNetwork?.text.toString())
+                if (binding?.MQTTKey?.text.toString() != "")
+                    sharedViewModel.updateMqttKey(binding?.MQTTKey?.text.toString())
+                if (binding?.MQTTUsername?.text.toString() != "")
+                    sharedViewModel.updateMqttUsername(binding?.MQTTUsername?.text.toString())
+                if (binding?.MQTTPassword?.text.toString() != "")
+                    sharedViewModel.updateMqttPassword(binding?.MQTTPassword?.text.toString())
 
-                // open mQTT Broker communication
+                // Connect to MQTT using the data view model
                 sharedViewModel.mqttClientID = MqttClient.generateClientId()
-                sharedViewModel.mqttClient = MQTTClient(context, mqttNetwork, sharedViewModel.mqttClientID)
+                sharedViewModel.mqttClient = MQTTClient(context, sharedViewModel.mqttNetwork.value!!, sharedViewModel.mqttClientID)
+                sharedViewModel.connectToMQTT()
 
-                sharedViewModel.mqttClient.connect(
-                    mqttUsername,
-                    mqttPassword,
-                    object : IMqttActionListener {
-                        override fun onSuccess(asyncActionToken: IMqttToken?) {
-                            Log.d(TAG, "Connection success")
-                            val successMsg = "MQTT Connection to $mqttNetwork Established"
-                            Toast.makeText(context, successMsg, Toast.LENGTH_LONG).show()
-
-                            // subscribe to motor status topics
-                            subscribeToStatus("emdevlin/testMessage")
-                        }
-
-                        override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
-                            Log.d(TAG, "Connection failure: ${exception.toString()}")
-                            val failureMsg =
-                                "MQTT Connection to $mqttNetwork failed: ${exception?.toString()}"
-                            Toast.makeText(context, failureMsg, Toast.LENGTH_LONG).show()
-                            exception?.printStackTrace()
-                        }
-                    },
-
-                    object : MqttCallback {
-                        override fun messageArrived(topic: String?, message: MqttMessage?) {
-                            val msg = "Received message: ${message.toString()} from topic: $topic"
-                            Log.d(TAG, msg)
-
-                            // since a message arrived I'm assuming that the topic string is not null
-                            if (topic!! == "emdevlin/testMessage") {
-                               sharedViewModel.updateDownCounter(message.toString())
-                            }
-
-                            else {
-                                Log.d(TAG, "Received invalid topic: $topic")
-                            }
-                        }
-
-                        override fun connectionLost(cause: Throwable?) {
-                            Log.d(TAG, "Connection lost ${cause.toString()}")
-                        }
-
-                        override fun deliveryComplete(token: IMqttDeliveryToken?) {
-                            Log.d(TAG, "Delivery complete")
-                        }
-                    })
-                findNavController().navigate(R.id.action_welcomeFragment_to_mainControlsFragment)
+                // Check if the connection worked
+                sharedViewModel.mqttConnected.observe(viewLifecycleOwner) {
+                    if (sharedViewModel.mqttConnected.value == true) {
+                        val successMsg = "MQTT Connection to ${sharedViewModel.mqttNetwork.value} Established"
+                        Toast.makeText(context, successMsg, Toast.LENGTH_SHORT).show()
+                        findNavController().navigate(R.id.action_welcomeFragment_to_mainControlsFragment)
+                    } else {
+                        val failureMsg = "MQTT Connection to ${sharedViewModel.mqttNetwork.value} failed."
+                        Toast.makeText(context, failureMsg, Toast.LENGTH_LONG).show()
+                    }
+                }
             }
         }
     }
@@ -147,37 +111,9 @@ class WelcomeFragment : Fragment() {
         return result
     }
 
-    private fun subscribeToStatus(subscribeTopic: String) {
-        // subscribe to status topic only if connected to broker
-        if (sharedViewModel.mqttClient.isConnected()) {
-            sharedViewModel.mqttClient.subscribe(
-                topic = subscribeTopic,
-                qos = 1,
-                object : IMqttActionListener {
-                    override fun onSuccess(asyncActionToken: IMqttToken?) {
-                        val msg = "Subscribed to: $subscribeTopic"
-                        Log.d(TAG, msg)
-                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-                    }
-
-                    override fun onFailure(
-                        asyncActionToken: IMqttToken?,
-                        exception: Throwable?
-                    ) {
-                        Log.d(
-                            TAG, "Failed to subscribe: $subscribeTopic exception: ${exception.toString()}"
-                        )
-                    }
-                })
-        } else {
-            Log.d(TAG, "Cannot subscribe to $subscribeTopic: Not connected to server")
-        }
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         Log.d("Welcome Fragment: ","Fragment Destroyed")
         binding = null
     }
-
 }

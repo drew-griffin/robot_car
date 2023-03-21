@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/welcomeFragment"
         android:name="edu.pdx.robot_car.robotcarapp.WelcomeFragment"
-        android:label="WelcomeFragment" >
+        android:label="Welcome to our Robot Car!" >
         <action
             android:id="@+id/action_welcomeFragment_to_mainControlsFragment"
             app:destination="@id/mainControlsFragment" />
@@ -16,23 +16,19 @@
     <fragment
         android:id="@+id/mainControlsFragment"
         android:name="edu.pdx.robot_car.robotcarapp.MainControlsFragment"
-        android:label="fragment_main_controls"
+        android:label="Main Controls"
         tools:layout="@layout/fragment_main_controls" >
-        <action
-            android:id="@+id/action_mainControlsFragment_to_motorStatusFragment"
-            app:destination="@id/motorStatusFragment" />
         <action
             android:id="@+id/action_mainControlsFragment_to_videoFeedFragment"
             app:destination="@id/videoFeedFragment" />
     </fragment>
     <fragment
-        android:id="@+id/motorStatusFragment"
-        android:name="edu.pdx.robot_car.robotcarapp.MotorStatusFragment"
-        android:label="fragment_motor_status"
-        tools:layout="@layout/fragment_motor_status" />
-    <fragment
         android:id="@+id/videoFeedFragment"
         android:name="edu.pdx.robot_car.robotcarapp.VideoFeedFragment"
-        android:label="fragment_video_feed"
-        tools:layout="@layout/fragment_video_feed" />
+        android:label="Live Video from the Robot Car"
+        tools:layout="@layout/fragment_video_feed" >
+        <action
+            android:id="@+id/action_videoFeedFragment_to_mainControlsFragment"
+            app:destination="@id/mainControlsFragment" />
+    </fragment>
 </navigation>

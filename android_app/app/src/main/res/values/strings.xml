@@ -1,5 +1,13 @@
 <resources>
     <string name="app_name">RobotCarApp</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="live_video">Video Mode</string>
+    <string name="motor_status_details">Motor Status Details</string>
+    <string name="up_arrow">up arrow</string>
+    <string name="down_arrow">down arrow</string>
+    <string name="left_arrow">left arrow</string>
+    <string name="right_arrow">right arrow</string>
+    <string name="motor_1">Motor 1:</string>
+    <string name="motor_2">Motor 2:</string>
+    <string name="motor_mode">Motor Mode</string>
+
 </resources>

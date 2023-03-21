@@ -9,7 +9,7 @@ android {
     defaultConfig {
         applicationId "edu.pdx.robot_car.robotcarapp"
         minSdk 26
-        targetSdk 33
+        targetSdk 30
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -84,4 +84,10 @@ dependencies {
     implementation 'androidx.fragment:fragment-ktx:1.5.5'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
     implementation "android.arch.lifecycle:extensions:1.1.1"
+
+    // Gauge Library
+    implementation 'com.github.anastr:speedviewlib:1.6.0'
+
+    // MJPEG Library
+    implementation 'com.github.perthcpe23:android-mjpeg-view:v1.0.9'
 }

@@ -404,22 +404,22 @@
 	end    
 
 	// Add user logic here
-	//wire [31:0] ticker_output;
-   // synchronize tachA to clock
-   reg tachA_delay, tachA_clean, tachB_delay, tachB_clean;
-   always @ (posedge S_AXI_ACLK) begin
-      tachA_delay <= tachA;
-      tachA_clean <= tachA_delay;
-      tachB_delay <= tachB;
-      tachB_clean <= tachB_delay;
-   end
-    //wire reset;
-    //assign reset = ~S_AXI_ARESETN;
+   
+    // synchronize tachA to clock
+    reg tachA_delay, tachA_clean, tachB_delay, tachB_clean;
+    always @ (posedge S_AXI_ACLK) begin
+    	tachA_delay <= tachA;
+    	tachA_clean <= tachA_delay;
+    	tachB_delay <= tachB;
+      	tachB_clean <= tachB_delay;
+    end
+   
+    //set direction of motor (testing)
+    //assign direction = slv_reg0[0];
+   
     pmodhb3 HB3(
         .clk(S_AXI_ACLK),
         .reset(S_AXI_ARESETN),
-        .tachA(tachA_clean),
-        .tachB(tachB_clean),
         .controlReg(slv_reg0),
         .direction(direction),
         .enable(enable)
@@ -430,10 +430,4 @@
         .tachA(tachA_clean),
         .tick_out(ticker_out)
     );
-    
-   // always @* begin
- //       slv_reg1 = ticker_output;
-  //  end
-	// User logic ends
-
 	endmodule

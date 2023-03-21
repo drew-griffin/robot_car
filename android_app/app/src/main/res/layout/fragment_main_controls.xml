@@ -13,87 +13,124 @@
             name="mainControlsFragment"
             type="edu.pdx.robot_car.robotcarapp.MainControlsFragment" />
     </data>
-    <LinearLayout
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:id="@+id/main_controls_constraint_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-            <Button
-                android:id="@+id/up"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="move Up" />
 
-            <Button
-                android:id="@+id/down"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="move Down" />
+        <Button
+            android:id="@+id/videoFeedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="270dp"
+            android:text="@string/live_video"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/directionStatus" />
 
-            <Button
-                android:id="@+id/right"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="move Right" />
+        <ImageButton
+            android:id="@+id/up"
+            android:layout_width="78dp"
+            android:layout_height="77dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="300dp"
+            android:contentDescription="@string/up_arrow"
+            android:scaleType="fitXY"
+            android:src="@drawable/up_arrow"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/videoFeedButton" />
 
-            <Button
-                android:id="@+id/left"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="move Left" />
+        <ImageButton
+            android:id="@+id/down"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginTop="100dp"
+            android:layout_marginBottom="100dp"
+            android:contentDescription="@string/down_arrow"
+            android:scaleType="fitXY"
+            android:src="@drawable/down_arrow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/up" />
 
-            <View
-                android:id="@+id/divider1"
-                android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:background="?android:attr/listDivider" />
+        <ImageButton
+            android:id="@+id/right"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="93dp"
+            android:layout_marginBottom="1dp"
+            android:contentDescription="@string/right_arrow"
+            android:scaleType="fitXY"
+            android:src="@drawable/right_arrow"
+            app:layout_constraintBottom_toTopOf="@+id/down"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/down"
+            app:layout_constraintTop_toBottomOf="@+id/up" />
 
-            <Button
-                android:id="@+id/motorStatusButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Motor Status Details" />
+        <ImageButton
+            android:id="@+id/left"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginStart="93dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:contentDescription="@string/left_arrow"
+            android:scaleType="fitXY"
+            android:src="@drawable/left_arrow"
+            app:layout_constraintBottom_toTopOf="@+id/down"
+            app:layout_constraintEnd_toStartOf="@+id/down"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/up" />
 
-            <Button
-                android:id="@+id/videoFeedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Live Video" />
+        <TextView
+            android:id="@+id/directionStatus"
+            android:layout_width="342dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="230dp"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            android:textAlignment="textStart"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@+id/videoFeedButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="RtlCompat"
+            tools:text="Robot is currently going forward" />
 
-            <View
-                android:id="@+id/divider"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:background="?android:attr/listDivider" />
+        <com.github.anastr.speedviewlib.SpeedView
+            android:id="@+id/speedView"
+            android:layout_width="159dp"
+            android:layout_height="164dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="100dp"
+            android:layout_marginBottom="450dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.625" />
 
-            <TextView
-                android:id="@+id/upCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{viewModel.upCounterString}"
-                android:textSize="20sp" />
+        <com.github.anastr.speedviewlib.SpeedView
+            android:id="@+id/speedView2"
+            android:layout_width="160dp"
+            android:layout_height="183dp"
+            android:layout_marginTop="100dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="450dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.624" />
 
-            <TextView
-                android:id="@+id/rightCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Right Count: "
-                android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/downCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{viewModel.downCounterString}"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/leftCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Left Count: "
-                android:textSize="20sp" />
-
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
