@@ -1,8 +1,6 @@
 ////////////
-// Note - modified by Drew Seidel (dseidel@pdx.edu)
-// For ECE 544 Project 2  
-// Top-level module for ECE 544 Project #2
-// May have to be modified for your specific embedded system implementation
+// Note - modified by Noah Page (nopage@pdx.edu), Drew Seidel (dseidel@pdx.edu), and Stephen Weeks (stweeks@pdx.edu)
+// For ECE 544/558 Final Project Robot Car  
 ///////////
 `timescale 1 ps / 1 ps
 
@@ -26,8 +24,12 @@ module nexysa7fpga
     seg,
     sw,
     clk,
-    RX,
-    TX,
+    //UART connection to PI 
+    RX_PI,
+    TX_PI,
+    //UART connection to ultrasonic Y401 sensor
+    RX_Y401,
+    TX_Y401, 
     // left motor header
     JA_out,
     JA_in,
@@ -57,8 +59,10 @@ module nexysa7fpga
   input  [1:0] JA_in;
   output [1:0] JB_out;
   input  [1:0] JB_in;
-  output TX;
-  input  RX;
+  output TX_PI;
+  input  RX_PI;
+  output TX_Y401;
+  input  RX_Y401;
 
   wire RGB2_Blue;
   wire RGB2_Green;
@@ -130,6 +134,8 @@ module nexysa7fpga
         .resetn(btnCpuReset),
         .seg_0(seg),
         .sw_0(sw),
-        .uart_rtl_0_rxd(RX),
-        .uart_rtl_0_txd(TX));
+        .uart_rtl_0_rxd(RX_PI),
+        .uart_rtl_0_txd(TX_PI),
+        .uart_rtl_1_rxd(RX_Y401),
+        .uart_rtl_1_txd(TX_Y401));
 endmodule

@@ -7,13 +7,12 @@
  * @brief
  * This is the header file for FIT interrupt handler
  * 
- * <pre>
  * MODIFICATION HISTORY:
  * ---------------------
  * Ver  Who Date    Changes
  * -----------------------------------
- * 1.00a SW 23-Feb-2023 First release
- * </pre>
+ * 0.01  SW 23-Feb-2023 First release
+ * 1.00  TEAM 19-Mar-2023 Version 1 full functionality release
 ************************************************************/
 
 #ifndef FIT_H

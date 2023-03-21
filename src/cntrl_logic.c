@@ -8,13 +8,12 @@
  * This is the source file for control functionality to the
  * push buttons, switches, encoder, and display.
  *
- * <pre>
  * MODIFICATION HISTORY:
  * ---------------------
  * Ver  Who Date    Changes
  * -----------------------------------
- * 1.00a SW 23-Feb-2023 First release
- * </pre>
+ * 0.01  SW 23-Feb-2023 First release
+ * 1.00  TEAM 19-Mar-2023 Version 1 full functionality release
  ************************************************************/
 
 #include "cntrl_logic.h"
@@ -190,8 +189,9 @@ void set_wheel_directions(bool left_wheel, bool right_wheel)
  *
  * @param		flag - tells us if we are running or stopping
  * 				the motors
+ * @param 		sw - has switch values. if switch 15 is on, in PID mode, else, open loop 
  */
-void run_motors(bool flag)
+void run_motors(bool flag, uint16_t sw)
 {
 	if (1 == DEBUG)
 	{
@@ -199,8 +199,16 @@ void run_motors(bool flag)
 	}
 	if (flag)
 	{
-		control_pid(HB3_LEFT_BA, leftMotorForward, &prev_left_error, &i_left); //control PID for left
-		control_pid(HB3_RIGHT_BA, rightMotorForward, &prev_right_error, &i_right); //control PID for right
+		if (sw >> 15 == 0x1)
+		{
+			control_pid(HB3_LEFT_BA, leftMotorForward, &prev_left_error, &i_left); //control PID for left
+			control_pid(HB3_RIGHT_BA, rightMotorForward, &prev_right_error, &i_right); //control PID for right
+		}
+		else
+		{
+			HB3_setPWM(HB3_LEFT_BA, pwmEnable, setpoint, leftMotorForward);
+			HB3_setPWM(HB3_RIGHT_BA, pwmEnable, setpoint, rightMotorForward);
+		}
 	}
 	else
 	{

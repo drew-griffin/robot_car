@@ -7,13 +7,12 @@
  * @brief
  * This is the header file for control functionality
  * 
- * <pre>
  * MODIFICATION HISTORY:
  * ---------------------
  * Ver  Who Date    Changes
  * -----------------------------------
- * 1.00a SW 23-Feb-2023 First release
- * </pre>
+ * 0.01  SW 23-Feb-2023 First release
+ * 1.00  TEAM 19-Mar-2023 Version 1 full functionality release
 ************************************************************/
 
 #ifndef CNTRL_LOGIC_H
@@ -65,7 +64,7 @@ void update_pid(ptr_user_io_t uIO);
 
 void set_wheel_directions(bool left_wheel, bool right_wheel);
 
-void run_motors(bool flag);
+void run_motors(bool flag, uint16_t sw);
 
 /**
  * setpoint_to_duty_cycle
