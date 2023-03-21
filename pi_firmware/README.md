@@ -1,2 +1,2 @@
-# Directory version 0.1
+# Directory version 1.0
 pi_firmware directory contains Raspberry Pi firmware

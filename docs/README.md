@@ -1,2 +1,2 @@
-# Directory version 0.1
+# Directory version 1.0
 docs directory contains all project documentation

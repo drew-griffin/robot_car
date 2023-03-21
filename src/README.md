@@ -1,2 +1,2 @@
-# Directory version 0.1
+# Directory version 1.0
 src directory contains all software source files

@@ -1,4 +1,4 @@
-# Version 0.1 - Initial Robot Car Repository 
+# Version 1.0 - First Robot Car Implementation
 https://github.com/drew-griffin/robot_car
 
 Drew Seidel (dseidel@pdx.edu)\
@@ -7,15 +7,16 @@ Noah Page (nopage@pdx.edu) \
 Emily Devlin (emdevlin@pdx.edu)
 
 # Repository Organization 
-- (optional) bitstream 
-    - will contain project bitstream
-- (optional) apk
-    - app apk 
+- bitstream 
+    - contains project bitstreams. demo_flexible.bit is the latest, where the ultrasonic sensor is enabled by turning on switch 0 of the NEXYS A7, and PID control is enabled by turning on switch 15 of the NEXYS A7. 
 - docs
     - proposal
     - project design report 
-    - contains flow_charts subdirectory for project flow charts
+    - project flow charts
     - the project embedded system hardware pdf
+    - project BOM 
+    - project presentation
+    - chassis svg file 
 - hardware
     - rebuild.tcl       - rebuilds vivado project
     - hdl               - project hdl code 
@@ -31,6 +32,8 @@ Emily Devlin (emdevlin@pdx.edu)
     - contains the Android Studio App
 - pi_firmware
     - contains the Raspberry Pi Firmware
+- demo
+    - contains a demo video of the working system 
 
 # Instructions for Building Project in Vivado 
 
@@ -48,6 +51,11 @@ rm -rf robot_car_hardware #run after first time
 ``` sh 
 vivado -source rebuild.tcl
 ```
+Upon making modifications in Vivado, run: 
+``` sh
+write_project_tcl -force rebuild
+```
+in the Vivado tcl console, and push the new rebuild.tcl file to GitHub
 
 # Instructions for Editing Android App
 
@@ -59,4 +67,4 @@ vivado -source rebuild.tcl
 ```
 4. Open project. RobotCarApp should appear upon open. 
 
-Note:  *The .gitignore should be set up that you can make modifications, and commit all files, and this will run seemlessly for team members (hopefully)*.
+Note:  *The .gitignore is set up such that you can make modifications, and commit all files, and this will run seemlessly for team members*.
